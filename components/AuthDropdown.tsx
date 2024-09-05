@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
 	},
 	dropdownButtonIconStyle: {
 		fontSize: 28,
-		marginHorizontal: 18,
+		marginLeft: 4,
+		marginRight: 15,
 	},
 	dropdownMenuStyle: {
 		backgroundColor: "#40346b",

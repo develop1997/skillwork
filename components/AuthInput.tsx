@@ -46,11 +46,8 @@ const AuthInput: FunctionComponent<AuthInputProps> = ({
 			left={
 				<TextInput.Icon
 					icon={icon}
-					color={"white"}
+					color="white"
 					size={36}
-					style={{
-						marginRight: 10,
-					}}
 				/>
 			}
 		/>
