@@ -6,12 +6,14 @@ interface AuthInputProps {
 	placeholder: string;
 	secureTextEntry?: boolean;
 	onChangeText?: (value: string) => void;
+	value?: string;
 }
 
 const AuthInput: FunctionComponent<AuthInputProps> = ({
 	icon,
 	placeholder,
 	secureTextEntry,
+	value,
 	onChangeText,
 }) => {
 	return (
@@ -40,6 +42,7 @@ const AuthInput: FunctionComponent<AuthInputProps> = ({
 			underlineStyle={{
 				display: "none",
 			}}
+			value={value}
 			left={
 				<TextInput.Icon
 					icon={icon}

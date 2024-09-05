@@ -46,7 +46,7 @@ export const LoginStyles = StyleSheet.create({
         fontFamily: Fonts.RobotoBold,
         fontSize: 18,
         lineHeight: 18,
-    },
+    }
 
 }
 )

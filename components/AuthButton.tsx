@@ -5,9 +5,10 @@ import { Button } from "react-native-paper";
 interface AuthButtonProps {
 	onPress: () => void;
 	text: string;
+	loading?: boolean;
 }
 
-const AuthButton: FunctionComponent<AuthButtonProps> = ({ onPress, text }) => {
+const AuthButton: FunctionComponent<AuthButtonProps> = ({ onPress, text, loading=false }) => {
 	return (
 		<Button
 			mode="contained"
@@ -15,15 +16,14 @@ const AuthButton: FunctionComponent<AuthButtonProps> = ({ onPress, text }) => {
 				width: "50%",
 				height: 60,
 				borderRadius: 30,
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
 			}}
 			labelStyle={{
 				fontSize: 20,
-				lineHeight: 20,
-                fontFamily: Fonts.RobotoBold
+				height: 40,
+				textAlignVertical: "center",
+                fontFamily: Fonts.RobotoBold,
 			}}
+			loading={loading}
 			theme={{
 				colors: {
 					primary: "#17f2de",

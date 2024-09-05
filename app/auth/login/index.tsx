@@ -8,8 +8,13 @@ import { useState } from "react";
 import AuthButton from "@/components/AuthButton";
 import { InternalLink } from "@/components/InternalLink";
 
+type FormDataType = {
+	email?: string;
+	password?: string;
+};
+
 export default function Login() {
-	const [data, setData] = useState({});
+	const [data, setData] = useState<FormDataType>();
 	return (
 		<>
 			<StatusBar barStyle="light-content" />
@@ -43,6 +48,7 @@ export default function Login() {
 							<AuthInput
 								icon="email"
 								placeholder="Email"
+								value={data?.email ? data?.email : ""}
 								onChangeText={(value) =>
 									setData({ ...data, email: value })
 								}
@@ -51,6 +57,7 @@ export default function Login() {
 								icon="lock"
 								placeholder="Contraseña"
 								secureTextEntry
+								value={data?.password ? data?.password : ""}
 								onChangeText={(value) =>
 									setData({ ...data, password: value })
 								}
@@ -65,7 +72,10 @@ export default function Login() {
 							>
 								Forgot your password?
 							</InternalLink>
-							<ThemedText style={LoginStyles.loginText} type="default">
+							<ThemedText
+								style={LoginStyles.loginText}
+								type="default"
+							>
 								Don't have an account?{" "}
 								<InternalLink
 									style={LoginStyles.loginLink}
