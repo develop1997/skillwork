@@ -14,12 +14,22 @@ interface DropdownProps {
 	data: Item[];
 	textDefault?: string;
 	onSelect: (selectedItem: Item) => void;
+	backgroundColor: string;
+	foregroundColor: string;
+	roundness: number;
+	height: number;
+	fontSize: number;
 }
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
 	data,
 	textDefault = "Select",
 	onSelect,
+	backgroundColor = "#40346b",
+	foregroundColor = "#fff",
+	roundness = 25,
+	height,
+	fontSize = 26,
 }) => {
 	return (
 		<SelectDropdown
@@ -27,52 +37,116 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 			onSelect={onSelect}
 			renderButton={(selectedItem: Item, isOpened) => {
 				return (
-					<View style={styles.dropdownButtonStyle}>
+					<View
+						style={[
+							styles.dropdownButtonStyle,
+							{
+								backgroundColor: backgroundColor,
+								color: foregroundColor,
+								borderRadius: roundness,
+								height: height,
+								fontSize: fontSize,
+								lineHeight: fontSize,
+							} as any,
+						]}
+					>
 						{selectedItem ? (
 							<>
-								<View style={styles.dropdownButtonIconStyle}>
+								<View
+									style={[
+										styles.dropdownButtonIconStyle,
+										{
+											fontSize: fontSize,
+										} as any,
+									]}
+								>
 									{IconsObject[selectedItem.icon]()}
 								</View>
-								<Text style={styles.dropdownButtonTxtStyle}>
+								<Text
+									style={[
+										styles.dropdownButtonTxtStyle,
+										{
+											color: foregroundColor,
+											fontSize: fontSize,
+											lineHeight: fontSize,
+										},
+									]}
+								>
 									{selectedItem.title}
 								</Text>
 							</>
 						) : (
-							<Text style={styles.dropdownButtonTxtStyle}>
+							<Text
+								style={[
+									styles.dropdownButtonTxtStyle,
+									{
+										color: foregroundColor,
+										fontSize: fontSize,
+										lineHeight: fontSize,
+									},
+								]}
+							>
 								{textDefault}
 							</Text>
 						)}
 						{isOpened ? (
-							<Entypo name="chevron-up" size={24} color="white" />
+							<Entypo
+								name="chevron-up"
+								size={24}
+								color={foregroundColor}
+							/>
 						) : (
 							<Entypo
 								name="chevron-down"
 								size={24}
-								color="white"
+								color={foregroundColor}
 							/>
 						)}
 					</View>
 				);
 			}}
-			renderItem={(item: Item, isSelected) => {
+			renderItem={(item: Item) => {
 				return (
 					<View
 						style={{
 							...styles.dropdownItemStyle,
-							...(isSelected && { backgroundColor: "#40346b" }),
+							...{
+								backgroundColor: backgroundColor,
+							},
 						}}
 					>
-						<View style={styles.dropdownButtonIconStyle}>
+						<View
+							style={[
+								styles.dropdownButtonIconStyle,
+								{
+									fontSize: fontSize,
+								} as any,
+							]}
+						>
 							{IconsObject[item.icon]()}
 						</View>
-						<Text style={styles.dropdownItemTxtStyle}>
+						<Text
+							style={[
+								styles.dropdownItemTxtStyle,
+								{
+									fontSize: fontSize,
+									lineHeight: fontSize,
+									color: foregroundColor,
+								},
+							]}
+						>
 							{item.title}
 						</Text>
 					</View>
 				);
 			}}
 			showsVerticalScrollIndicator={false}
-			dropdownStyle={styles.dropdownMenuStyle}
+			dropdownStyle={[
+				styles.dropdownMenuStyle,
+				{
+					backgroundColor: backgroundColor,
+				},
+			]}
 		/>
 	);
 };
@@ -82,12 +156,6 @@ export default Dropdown;
 const styles = StyleSheet.create({
 	dropdownButtonStyle: {
 		marginVertical: 15,
-		fontSize: 26,
-		lineHeight: 26,
-		height: 80,
-		backgroundColor: "#40346b",
-		color: "#fff",
-		borderRadius: 25,
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
@@ -95,21 +163,13 @@ const styles = StyleSheet.create({
 	},
 	dropdownButtonTxtStyle: {
 		flex: 1,
-		fontSize: 26,
-		lineHeight: 26,
 		fontWeight: "500",
-		color: "#fff",
-	},
-	dropdownButtonArrowStyle: {
-		fontSize: 28,
 	},
 	dropdownButtonIconStyle: {
-		fontSize: 28,
 		marginLeft: 4,
 		marginRight: 15,
 	},
 	dropdownMenuStyle: {
-		backgroundColor: "#40346b",
 		borderRadius: 8,
 	},
 	dropdownItemStyle: {
@@ -121,13 +181,6 @@ const styles = StyleSheet.create({
 	},
 	dropdownItemTxtStyle: {
 		flex: 1,
-		fontSize: 26,
-		lineHeight: 26,
 		fontWeight: "500",
-		color: "#fff",
-	},
-	dropdownItemIconStyle: {
-		fontSize: 28,
-		marginHorizontal: 18,
 	},
 });

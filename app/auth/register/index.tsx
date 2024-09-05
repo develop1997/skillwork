@@ -6,7 +6,7 @@ import AuthInput from "@/components/AuthInput";
 import { useState } from "react";
 import AuthButton from "@/components/AuthButton";
 import { InternalLink } from "@/components/InternalLink";
-import Dropdown from "@/components/AuthDropdown";
+import Dropdown from "@/components/Dropdown";
 import { RolesConstants } from "@/constants/Roles";
 
 type FormDataType = {
@@ -45,6 +45,11 @@ export default function Register() {
 						</View>
 						<View>
 							<Dropdown
+								backgroundColor="#40346b"
+								fontSize={26}
+								foregroundColor="#fff"
+								height={80}
+								roundness={25}
 								data={[
 									{
 										title: "Cliente",
