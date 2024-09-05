@@ -58,7 +58,7 @@ export default function ForgotPassword() {
 						</View>
 
 						<View style={GeneralStyles.centeredView}>
-							<AuthButton text="ENVIAR" onPress={() => {}} />
+							<AuthButton text="Enviar" onPress={() => {}} />
 						</View>
 					</View>
 				</View>

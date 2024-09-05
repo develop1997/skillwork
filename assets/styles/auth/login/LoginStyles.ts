@@ -29,6 +29,14 @@ export const LoginStyles = StyleSheet.create({
         height: ((windowHeight * 0.8) - (windowHeight * 0.2)),
         padding: 20,
     },
+    formCardNoImage: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-evenly",
+        width: windowWidth * 0.8,
+        height: windowHeight * 0.8,
+        padding: 20,
+    },
     loginTittle: {
         color: "white",
         fontSize: 48,
