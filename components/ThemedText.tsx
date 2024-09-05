@@ -1,3 +1,4 @@
+import { Fonts } from '@/assets/fonts/fonts';
 import { Text, type TextProps, StyleSheet } from 'react-native';
 
 export type ThemedTextProps = TextProps & {
@@ -33,24 +34,29 @@ const styles = StyleSheet.create({
   default: {
     fontSize: 16,
     lineHeight: 24,
+    fontFamily: Fonts.RobotoRegular,
   },
   defaultSemiBold: {
     fontSize: 16,
     lineHeight: 24,
     fontWeight: '600',
+    fontFamily: Fonts.RobotoBold,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
     lineHeight: 32,
+    fontFamily: Fonts.RobotoBold,
   },
   subtitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    fontFamily: Fonts.RobotoBold,
   },
   link: {
     lineHeight: 30,
     fontSize: 16,
     color: '#0a7ea4',
+    fontFamily: Fonts.RobotoMedium,
   },
 });
