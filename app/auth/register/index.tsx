@@ -8,6 +8,10 @@ import AuthButton from "@/components/AuthButton";
 import { InternalLink } from "@/components/InternalLink";
 import Dropdown from "@/components/Dropdown";
 import { RolesConstants } from "@/constants/Roles";
+import RegisterUser from "@/api/Auth/Register";
+import { Button, Dialog, Portal } from "react-native-paper";
+import { useNavigation } from "expo-router";
+import BackHeaderButton from "@/components/BackAction";
 
 type FormDataType = {
 	email?: string;
@@ -18,9 +22,59 @@ type FormDataType = {
 
 export default function Register() {
 	const [data, setData] = useState<FormDataType>();
+	const [error, setError] = useState<string>();
+	const [visible, setVisible] = useState(false);
+	const router = useNavigation();
+
+	const hideModal = () => setVisible(false);
+
+	const onSubmit = () => {
+		if (
+			data?.email &&
+			data?.password &&
+			data?.confirmPassword &&
+			data?.role &&
+			data?.password === data?.confirmPassword
+		) {
+			RegisterUser(data?.email, data?.password, data?.role)
+				.then((res) => {
+					router.navigate("login" as never);
+				})
+				.catch((err) => {
+					setError("Something went wrong: " + err);
+				});
+		} else {
+			if (!data?.email) {
+				setError("Email is required");
+			} else if (!data?.password) {
+				setError("Password is required");
+			} else if (!data?.role) {
+				setError("Role is required");
+			} else if (!data?.confirmPassword) {
+				setError("Confirm Password is required");
+			} else if (data?.password !== data?.confirmPassword) {
+				setError("Passwords do not match");
+			}
+			setVisible(true);
+		}
+	};
+
 	return (
 		<>
 			<StatusBar barStyle="light-content" />
+
+			<Portal>
+				<BackHeaderButton backgroundColor="#1f1a30" />
+				<Dialog visible={visible} onDismiss={hideModal}>
+					<Dialog.Title>Error</Dialog.Title>
+					<Dialog.Content>
+						<ThemedText>{error}</ThemedText>
+					</Dialog.Content>
+					<Dialog.Actions>
+						<Button onPress={hideModal}>OK</Button>
+					</Dialog.Actions>
+				</Dialog>
+			</Portal>
 			<View
 				style={{
 					...GeneralStyles.centeredView,
@@ -100,7 +154,7 @@ export default function Register() {
 						</View>
 
 						<View style={GeneralStyles.centeredView}>
-							<AuthButton text="Registrarse" onPress={() => {}} />
+							<AuthButton text="Registrarse" onPress={onSubmit} />
 							<ThemedText
 								style={LoginStyles.loginText}
 								type="default"

@@ -15,6 +15,7 @@ type FormDataType = {
 
 export default function Login() {
 	const [data, setData] = useState<FormDataType>();
+	
 	return (
 		<>
 			<StatusBar barStyle="light-content" />

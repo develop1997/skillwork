@@ -7,6 +7,7 @@ import AuthInput from "@/components/AuthInput";
 import { useState } from "react";
 import AuthButton from "@/components/AuthButton";
 import BackHeaderButton from "@/components/BackAction";
+import { Portal } from "react-native-paper";
 
 type FormDataType = {
 	email?: string;
@@ -18,14 +19,16 @@ export default function ForgotPassword() {
 	return (
 		<>
 			<StatusBar barStyle="light-content" />
+			<Portal>
+				<BackHeaderButton backgroundColor="#1f1a30" />
+			</Portal>
+
 			<View
 				style={{
 					...GeneralStyles.centeredView,
 					...LoginStyles.background,
 				}}
 			>
-				<BackHeaderButton backgroundColor="#1f1a30" />
-
 				<View style={LoginStyles.loginContent}>
 					<Image
 						source={AdaptativeLogo as any}
