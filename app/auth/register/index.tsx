@@ -12,6 +12,7 @@ import RegisterUser from "@/api/Auth/Register";
 import { Button, Dialog, Portal } from "react-native-paper";
 import { useNavigation } from "expo-router";
 import BackHeaderButton from "@/components/BackAction";
+import { isEmailValid, isPasswordValid } from "@/utils/forms/validate";
 
 type FormDataType = {
 	email?: string;
@@ -24,38 +25,49 @@ export default function Register() {
 	const [data, setData] = useState<FormDataType>();
 	const [error, setError] = useState<string>();
 	const [visible, setVisible] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const router = useNavigation();
 
 	const hideModal = () => setVisible(false);
 
 	const onSubmit = () => {
-		if (
-			data?.email &&
-			data?.password &&
-			data?.confirmPassword &&
-			data?.role &&
-			data?.password === data?.confirmPassword
-		) {
-			RegisterUser(data?.email, data?.password, data?.role)
+		if(loading) return
+		
+		setLoading(true);
+		let error = undefined;
+
+		if (!data?.email) {
+			error = "Email is required";
+		} else if (!data?.password) {
+			error = "Password is required";
+		} else if (!data?.role) {
+			error = "Role is required";
+		} else if (!data?.confirmPassword) {
+			error = "Confirm Password is required";
+		} else if (data?.password !== data?.confirmPassword) {
+			error = "Passwords do not match";
+		} else if (!isEmailValid(data?.email)) {
+			error = "Invalid email";
+		} else if (!isPasswordValid(data?.password)) {
+			error =
+				"Invalid password, minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character";
+		} else {
+			RegisterUser(data.email, data.password, data.role)
 				.then((res) => {
 					router.navigate("login" as never);
+					setLoading(false);
 				})
 				.catch((err) => {
-					setError("Something went wrong: " + err);
+					error = "Something went wrong: " + err;
+					setError(error);
+					setVisible(true);
+					setLoading(false);
 				});
-		} else {
-			if (!data?.email) {
-				setError("Email is required");
-			} else if (!data?.password) {
-				setError("Password is required");
-			} else if (!data?.role) {
-				setError("Role is required");
-			} else if (!data?.confirmPassword) {
-				setError("Confirm Password is required");
-			} else if (data?.password !== data?.confirmPassword) {
-				setError("Passwords do not match");
-			}
+		}
+		if (error) {
+			setError(error);
 			setVisible(true);
+			setLoading(false);
 		}
 	};
 
@@ -118,7 +130,7 @@ export default function Register() {
 								]}
 								textDefault="Seleccione un rol"
 								onSelect={(item) =>
-									setData({ ...data, role: item.title })
+									setData({ ...data, role: item.value })
 								}
 							/>
 							<AuthInput
@@ -126,7 +138,7 @@ export default function Register() {
 								placeholder="Email"
 								value={data?.email ? data?.email : ""}
 								onChangeText={(value) =>
-									setData({ ...data, email: value })
+									setData({ ...data, email: value.trim() })
 								}
 							/>
 							<AuthInput
@@ -135,7 +147,7 @@ export default function Register() {
 								secureTextEntry
 								value={data?.password ? data?.password : ""}
 								onChangeText={(value) =>
-									setData({ ...data, password: value })
+									setData({ ...data, password: value.trim() })
 								}
 							/>
 							<AuthInput
@@ -148,13 +160,13 @@ export default function Register() {
 										: ""
 								}
 								onChangeText={(value) =>
-									setData({ ...data, confirmPassword: value })
+									setData({ ...data, confirmPassword: value.trim() })
 								}
 							/>
 						</View>
 
 						<View style={GeneralStyles.centeredView}>
-							<AuthButton text="Registrarse" onPress={onSubmit} />
+							<AuthButton loading={loading} text="Registrarse" onPress={onSubmit} />
 							<ThemedText
 								style={LoginStyles.loginText}
 								type="default"

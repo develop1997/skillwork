@@ -39,6 +39,10 @@ export default function RootLayout() {
 					name="index"
 					options={{ headerShown: false, animation: "none" }}
 				/>
+				<Stack.Screen
+					name="home"
+					options={{ headerShown: false, animation: "fade" }}
+				/>
 			</Stack>
 		</PaperProvider>
 	);

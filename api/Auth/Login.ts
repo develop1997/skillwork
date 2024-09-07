@@ -1,20 +1,15 @@
+import axios from "axios";
+
 const apiUrl = process.env.EXPO_PUBLIC_BACKEND_API;
 
-export default async function Login(email: string, password: string) {
-    const response = await fetch(`${apiUrl}/api/v1/user`, {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            email,
-            password,
-        }),
-    });
-    if (!response.ok) {
-        throw new Error(response.statusText);
-    }
+export default async function LoginUser(email: string, password: string) {
 
-    return response.json();
+    const response = await axios.post(`${apiUrl}/api/v1/user/signin`, {
+        email,
+        password
+    })
+    if (response.status !== 200) {
+        throw new Error(response.data);
+    }
+    return response.data
 }
