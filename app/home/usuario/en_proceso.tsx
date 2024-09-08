@@ -1,41 +1,34 @@
-import { ThemedText } from "@/components/ThemedText";
-import {
-	RootStoreType,
-	RootatoreKeys,
-	deleteFromSecureStore,
-	useRootStore,
-} from "@/store/RootStore";
-import { useNavigation } from "expo-router";
+import { HomeGenerals } from "@/assets/styles/home/HomeGenerals";
+import WorkCard from "@/components/workCards/WorkCard";
 import { FunctionComponent } from "react";
-import { Button, StatusBar } from "react-native";
+import { StatusBar } from "react-native";
+import {
+	GestureHandlerRootView,
+	ScrollView,
+} from "react-native-gesture-handler";
 
 interface InProgressProps {}
 
 const InProgress: FunctionComponent<InProgressProps> = () => {
-	const router = useNavigation().getParent();
-	const setSesion_token = useRootStore(
-		(state: RootStoreType) => state.setSesion_token
-	);
-
-	const setUser_role = useRootStore(
-		(state: RootStoreType) => state.setUser_role
-	);
-
-	const handleLogout = async () => {
-		deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
-			deleteFromSecureStore(RootatoreKeys.USER_ROLE).then(() => {
-				setSesion_token(undefined);
-				setUser_role(undefined);
-				router?.goBack();
-			});
-		});
-	};
-
 	return (
 		<>
 			<StatusBar barStyle="light-content" />
-			<ThemedText>En Proceso (usuario)</ThemedText>
-			<Button title="Logout" onPress={handleLogout} />
+			<GestureHandlerRootView style={{ flex: 1 }}>
+				<ScrollView
+					style={HomeGenerals.background}
+					centerContent
+					contentContainerStyle={HomeGenerals.contentScroll}
+				>
+					{Array.from({ length: 20 }).map((_, index) => (
+						<WorkCard
+							key={index}
+							status="En Proceso"
+							title="Lorem ipsum"
+							content="Lorem ipsum odor amet, consectetuer adipiscing elit. Dis malesuada placerat fusce, sagittis curae porta. Natoque cursus id integer dui ad. Vulputate lacus tellus."
+						/>
+					))}
+				</ScrollView>
+			</GestureHandlerRootView>
 		</>
 	);
 };

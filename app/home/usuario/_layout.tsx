@@ -7,19 +7,19 @@ const windowWidth = Dimensions.get('window').width;
 export default function HomeLayout() {
 
 	return (
-		<Tabs screenOptions={{ tabBarActiveTintColor: "#fff" }}>
+		<Tabs screenOptions={{ tabBarActiveTintColor: "#fff",tabBarStyle:{
+			backgroundColor: "#40346b",
+			height: 60,
+		} }}>
 			<Tabs.Screen
 				name="en_proceso"
 				options={{
-					title: "En Proceso",
+					title: "Mis Aplicaciones",
 					headerStyle: {
 						backgroundColor: "#1f1a30",
 					},
 					headerTitleStyle: {
 						color: "white",
-					},
-					tabBarStyle: {
-						backgroundColor: "#40346b",
 					},
 					headerTitleAlign: "center",
 					tabBarIcon: ({ color }) => (
@@ -41,9 +41,6 @@ export default function HomeLayout() {
 					headerTitleStyle: {
 						color: "white",
 					},
-					tabBarStyle: {
-						backgroundColor: "#40346b",
-					},
 					headerTitleAlign: "center",
 					tabBarIcon: ({ color }) => (
 						<MaterialIcons
@@ -57,15 +54,12 @@ export default function HomeLayout() {
 			<Tabs.Screen
 				name="profile"
 				options={{
-					title: "Profile",
+					title: "Perfil",
 					headerStyle: {
 						backgroundColor: "#1f1a30",
 					},
 					headerTitleStyle: {
 						color: "white",
-					},
-					tabBarStyle: {
-						backgroundColor: "#40346b",
 					},
 					headerTitleAlign: "center",
 					tabBarIcon: ({ color }) => (
