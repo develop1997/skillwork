@@ -1,32 +1,44 @@
-import { ThemedText } from "@/components/ThemedText";
+import { RolesConstants } from "@/constants/Roles";
 import { RootStoreType, RootatoreKeys, deleteFromSecureStore, useRootStore } from "@/store/RootStore";
-import { useNavigation } from "expo-router";
-import { FunctionComponent } from "react";
-import { Button, StatusBar } from "react-native";
+import { Redirect, useNavigation } from "expo-router";
+import { FunctionComponent, useEffect } from "react";
 
 interface HomeProps {}
 
 const Home: FunctionComponent<HomeProps> = () => {
-	const router = useNavigation();
+	const user_role = useRootStore((state: RootStoreType) => state.user_role);
+	const router = useNavigation()
 	const setSesion_token = useRootStore(
 		(state: RootStoreType) => state.setSesion_token
 	);
 
+	const setUser_role = useRootStore(
+		(state: RootStoreType) => state.setUser_role
+	);
+
 	const handleLogout = async () => {
 		deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
-			setSesion_token(undefined);
-			router.goBack();
-		})
+			deleteFromSecureStore(RootatoreKeys.USER_ROLE).then(() => {
+				setSesion_token(undefined);
+				setUser_role(undefined);
+				router?.goBack();
+			});
+		});
 	};
 
-	return (
-		<>
-			<StatusBar barStyle="light-content" />
-			<ThemedText>Home</ThemedText>
-			<Button title="log out" onPress={handleLogout} />
-			
-		</>
-	);
+	useEffect(() => {
+		if (!user_role) {
+			handleLogout();
+		}
+	}, []);
+
+	if (!user_role) return null;
+
+	if (user_role === RolesConstants.CLIENTE) {
+		return <Redirect href={"/home/cliente" as any} />;
+	} else if (user_role === RolesConstants.USUARIO) {
+		return <Redirect href={"/home/usuario" as any} />;
+	}
 };
 
 export default Home;

@@ -13,6 +13,7 @@ import { Button, Dialog, Portal } from "react-native-paper";
 import { isEmailValid, isPasswordValid } from "@/utils/forms/validate";
 import {
 	RootatoreKeys,
+	deleteFromSecureStore,
 	readFromSecureStore,
 	saveToSecureStore,
 	useRootStore,
@@ -36,16 +37,30 @@ export default function Login() {
 	const setSesion_token = useRootStore(
 		(state: RootStoreType) => state.setSesion_token
 	);
+	const setUser_role = useRootStore(
+		(state: RootStoreType) => state.setUser_role
+	);
 
 	const sesion_token = useRootStore(
 		(state: RootStoreType) => state.sesion_token
 	);
 
+	const user_role = useRootStore((state: RootStoreType) => state.user_role);
+
 	// verify if user is already logged in
 	useEffect(() => {
 		readFromSecureStore(RootatoreKeys.SESION_TOKEN).then((token) => {
 			if (token) {
-				setSesion_token(token);
+				readFromSecureStore(RootatoreKeys.USER_ROLE).then((role) => {
+					if (role) {
+						setUser_role(parseInt(role));
+						setSesion_token(token);
+					} else {
+						deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
+							setVerifying(false);
+						})
+					}
+				});
 			} else {
 				setVerifying(false);
 			}
@@ -54,10 +69,10 @@ export default function Login() {
 
 	// redirect to home if user is already logged in
 	useEffect(() => {
-		if (sesion_token) {
+		if (sesion_token && user_role) {
 			router.getParent()?.navigate("home" as never);
 		}
-	}, [sesion_token]);
+	}, [sesion_token, user_role]);
 
 	const handleLogin = () => {
 		if (loading) return;
@@ -77,13 +92,20 @@ export default function Login() {
 		} else {
 			LoginUser(data.email, data.password)
 				.then((res) => {
-					saveToSecureStore(RootatoreKeys.SESION_TOKEN, res).then(
-						() => {
-							setLoading(false);
+					saveToSecureStore(
+						RootatoreKeys.SESION_TOKEN,
+						res["token"]
+					).then(() => {
+						setSesion_token(res["token"]);
+						saveToSecureStore(
+							RootatoreKeys.USER_ROLE,
+							res["role"].toString()
+						).then(() => {
 							setData({});
-							setSesion_token(res);
-						}
-					);
+							setUser_role(res["role"]);
+							setLoading(false);
+						});
+					});
 				})
 				.catch((err: AxiosError) => {
 					error = "Something went wrong: " + err.response?.data;
