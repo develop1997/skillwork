@@ -6,14 +6,22 @@ interface AuthButtonProps {
 	onPress: () => void;
 	text: string;
 	loading?: boolean;
+	primaryColor?: string;
+	secondaryColor?: string;
 }
 
-const AuthButton: FunctionComponent<AuthButtonProps> = ({ onPress, text, loading=false }) => {
+const AuthButton: FunctionComponent<AuthButtonProps> = ({
+	onPress,
+	text,
+	loading = false,
+	primaryColor = "#17f2de",
+	secondaryColor = "#000",
+}) => {
 	return (
 		<Button
 			mode="contained"
 			style={{
-				width: "50%",
+				minWidth: "40%",
 				height: 60,
 				borderRadius: 30,
 			}}
@@ -21,13 +29,13 @@ const AuthButton: FunctionComponent<AuthButtonProps> = ({ onPress, text, loading
 				fontSize: 20,
 				height: 40,
 				textAlignVertical: "center",
-                fontFamily: Fonts.RobotoBold,
+				fontFamily: Fonts.RobotoBold,
 			}}
 			loading={loading}
 			theme={{
 				colors: {
-					primary: "#17f2de",
-					onPrimary: "#000",
+					primary: primaryColor,
+					onPrimary: secondaryColor,
 				},
 			}}
 			onPress={onPress}

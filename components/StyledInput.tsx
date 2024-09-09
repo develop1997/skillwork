@@ -2,11 +2,12 @@ import { FunctionComponent } from "react";
 import { TextInput } from "react-native-paper";
 
 interface AuthInputProps {
-	icon: string;
+	icon?: any;
 	placeholder: string;
 	secureTextEntry?: boolean;
 	onChangeText?: (value: string) => void;
 	value?: string;
+	numberOfLines?: number;
 }
 
 const AuthInput: FunctionComponent<AuthInputProps> = ({
@@ -15,9 +16,12 @@ const AuthInput: FunctionComponent<AuthInputProps> = ({
 	secureTextEntry,
 	value,
 	onChangeText,
+	numberOfLines = 1,
 }) => {
 	return (
 		<TextInput
+			numberOfLines={numberOfLines}
+			multiline={numberOfLines > 1}
 			label={placeholder}
 			style={{
 				marginVertical: 15,
@@ -25,7 +29,7 @@ const AuthInput: FunctionComponent<AuthInputProps> = ({
 				backgroundColor: "#40346b",
 				fontSize: 26,
 				lineHeight: 26,
-				height: 80,
+				minHeight: 80,
 			}}
 			theme={{
 				roundness: 25,
@@ -44,11 +48,7 @@ const AuthInput: FunctionComponent<AuthInputProps> = ({
 			}}
 			value={value}
 			left={
-				<TextInput.Icon
-					icon={icon}
-					color="white"
-					size={36}
-				/>
+				icon && <TextInput.Icon icon={icon} color="white" size={36} />
 			}
 		/>
 	);

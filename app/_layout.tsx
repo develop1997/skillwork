@@ -29,8 +29,7 @@ export default function RootLayout() {
 
 	return (
 		<PaperProvider>
-			<Stack
-			>
+			<Stack>
 				<Stack.Screen
 					name="auth"
 					options={{ headerShown: false, animation: "fade" }}
