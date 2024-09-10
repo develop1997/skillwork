@@ -1,6 +1,7 @@
+import { Enviroment } from "@/store/enviroment";
 import axios from "axios";
 
-const apiUrl = process.env.EXPO_PUBLIC_BACKEND_API
+const apiUrl = Enviroment.BACKEND_API
 
 export async function ForgotPasswordEmail(email: string) {
 

@@ -13,17 +13,14 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.skillwork.app"
     },
     "android": {
-      "permissions": [
-        "android.permission.INTERNET"
-      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.keiner5212.skillwork"
+      "package": "com.skillwork.app"
     },
     "web": {
       "bundler": "metro",

@@ -34,7 +34,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 			deleteFromSecureStore(RootatoreKeys.USER_ROLE).then(() => {
 				setSesion_token(undefined);
 				setUser_role(undefined);
-				router?.goBack();
+				router?.navigate("auth");
 			});
 		});
 	};

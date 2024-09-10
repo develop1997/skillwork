@@ -1,6 +1,7 @@
+import { Enviroment } from "@/store/enviroment";
 import axios from "axios";
 
-const apiUrl = process.env.EXPO_PUBLIC_BACKEND_API;
+const apiUrl = Enviroment.BACKEND_API
 
 export default async function LoginUser(email: string, password: string) {
 

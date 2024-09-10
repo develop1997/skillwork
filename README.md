@@ -10,18 +10,13 @@ This is an [Expo](https://expo.dev) project (React Native) created with [`create
     npm install
     ```
 
-2. Environment variables
-
-    - copy `.env.example` to `.env`
-    - fill in your environment variables
-
-3. Run the app
+2. Run the app
 
     ```bash
      npm start
     ```
 
-4. Build the app
+3. Build the app
 
     ```bash
      npm install --global eas-cli && eas init --id (Your app id)
