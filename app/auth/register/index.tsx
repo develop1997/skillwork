@@ -58,7 +58,12 @@ export default function Register() {
 					setLoading(false);
 				})
 				.catch((err) => {
-					error = "Something went wrong: " + err;
+					if(err.status==400){//email already exist in db
+						error=err.response.data
+					}else{
+						error=err
+					}
+					error = "Something went wrong: " + error;
 					setError(error);
 					setVisible(true);
 					setLoading(false);
