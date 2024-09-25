@@ -3,6 +3,8 @@ import { FunctionComponent } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import { IconsObject } from "./Icons";
+import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
+import { APP_VALUES } from "@/assets/styles/GeneralStyles";
 
 interface Item {
 	title: string;
@@ -14,9 +16,9 @@ interface DropdownProps {
 	data: Item[];
 	textDefault?: string;
 	onSelect: (selectedItem: Item) => void;
-	backgroundColor: string;
-	foregroundColor: string;
-	roundness: number;
+	backgroundColor?: string;
+	foregroundColor?: string;
+	roundness?: number;
 	height: number;
 	fontSize: number;
 }
@@ -25,11 +27,11 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 	data,
 	textDefault = "Select",
 	onSelect,
-	backgroundColor = "#40346b",
-	foregroundColor = "#fff",
-	roundness = 25,
 	height,
-	fontSize = 26,
+	backgroundColor = APP_VALUES.colors.tertiary,
+	foregroundColor = APP_VALUES.colors.text,
+	roundness = sizeNormalizer * 25,
+	fontSize = sizeNormalizer * 26,
 }) => {
 	return (
 		<SelectDropdown
@@ -42,12 +44,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 							styles.dropdownButtonStyle,
 							{
 								backgroundColor: backgroundColor,
-								color: foregroundColor,
 								borderRadius: roundness,
 								height: height,
-								fontSize: fontSize,
-								lineHeight: fontSize,
-							} as any,
+							},
 						]}
 					>
 						{selectedItem ? (
@@ -92,13 +91,13 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 						{isOpened ? (
 							<Entypo
 								name="chevron-up"
-								size={24}
+								size={sizeNormalizer * 24}
 								color={foregroundColor}
 							/>
 						) : (
 							<Entypo
 								name="chevron-down"
-								size={24}
+								size={sizeNormalizer * 24}
 								color={foregroundColor}
 							/>
 						)}
@@ -141,12 +140,11 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 				);
 			}}
 			showsVerticalScrollIndicator={false}
-			dropdownStyle={[
-				styles.dropdownMenuStyle,
-				{
-					backgroundColor: backgroundColor,
-				},
-			]}
+			dropdownStyle={{
+				...styles.dropdownMenuStyle,
+				backgroundColor: backgroundColor,
+			}}
+			statusBarTranslucent
 		/>
 	);
 };
@@ -155,32 +153,32 @@ export default Dropdown;
 
 const styles = StyleSheet.create({
 	dropdownButtonStyle: {
-		marginVertical: 15,
+		marginVertical: sizeNormalizer * 15,
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		paddingHorizontal: 12,
+		paddingHorizontal: sizeNormalizer * 12,
 	},
 	dropdownButtonTxtStyle: {
 		flex: 1,
-		fontWeight: "500",
+		fontWeight: "400",
 	},
 	dropdownButtonIconStyle: {
-		marginLeft: 4,
-		marginRight: 15,
+		marginLeft: sizeNormalizer * 4,
+		marginRight: sizeNormalizer * 15,
 	},
 	dropdownMenuStyle: {
-		borderRadius: 8,
+		borderRadius: sizeNormalizer * 8,
 	},
 	dropdownItemStyle: {
-		width: "100%",
+		width: windowWidth,
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		padding: 20,
+		padding: sizeNormalizer * 20,
 	},
 	dropdownItemTxtStyle: {
 		flex: 1,
-		fontWeight: "500",
+		fontWeight: "400",
 	},
 });

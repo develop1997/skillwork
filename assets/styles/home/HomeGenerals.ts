@@ -1,12 +1,11 @@
 
 import { Dimensions, StyleSheet } from "react-native";
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+import { APP_VALUES } from "../GeneralStyles";
+import { windowWidth } from "../normalizator";
 
 export const HomeGenerals = StyleSheet.create({
     background: {
-        backgroundColor: "#1f1a30",
+        backgroundColor: APP_VALUES.colors.primary,
         width: windowWidth,
     },
     contentScroll: {

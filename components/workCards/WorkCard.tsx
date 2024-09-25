@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { Path, Svg } from "react-native-svg";
 import { WorkCardStyles as styles } from "./WorkCardStyles";
+import { APP_VALUES } from "@/assets/styles/GeneralStyles";
 
 export class AvailableStatus {
 	static readonly EN_PROCESO = "En Proceso";
@@ -48,7 +49,7 @@ const WorkCard: FunctionComponent<WorkCardProps> = ({
 			>
 				<Path
 					d="M 0 0 L 0 16 C 0 16 0 17 1 17 L 25 17 C 26 17 26 16 26 16 L 26 4 C 26 4 26 3 25 3 L 1 0 C 0 0 0 1 0 1"
-					fill="#40346b"
+					fill={APP_VALUES.colors.secondaryLight}
 				/>
 			</Svg>
 			<View style={styles.content}>

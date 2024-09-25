@@ -1,4 +1,6 @@
 import { Fonts } from "@/assets/fonts/fonts";
+import { APP_VALUES } from "@/assets/styles/GeneralStyles";
+import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
 import { FunctionComponent } from "react";
 import { Button } from "react-native-paper";
 
@@ -14,21 +16,22 @@ const AuthButton: FunctionComponent<AuthButtonProps> = ({
 	onPress,
 	text,
 	loading = false,
-	primaryColor = "#17f2de",
-	secondaryColor = "#000",
+	primaryColor = APP_VALUES.colors.secondary,
+	secondaryColor = APP_VALUES.colors.text,
 }) => {
 	return (
 		<Button
 			mode="contained"
 			style={{
-				minWidth: "40%",
-				height: 60,
-				borderRadius: 30,
+				display: "flex",
+				minWidth: windowWidth * 0.3,
+				borderRadius: sizeNormalizer * 30,
+			}}
+			contentStyle={{
+				height: sizeNormalizer * 60,
 			}}
 			labelStyle={{
-				fontSize: 20,
-				height: 40,
-				textAlignVertical: "center",
+				fontSize: sizeNormalizer * 20,
 				fontFamily: Fonts.RobotoBold,
 			}}
 			loading={loading}

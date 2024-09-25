@@ -88,7 +88,7 @@ export default function Login() {
 			error = "Invalid email";
 		} else if (!isPasswordValid(data?.password)) {
 			error =
-				"Invalid password, minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character";
+				"Invalid password, minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character (@$!%*?&)";
 		} else {
 			LoginUser(data.email, data.password)
 				.then((res) => {
@@ -128,8 +128,7 @@ export default function Login() {
 
 	return (
 		<>
-			<StatusBar barStyle="light-content" />
-
+			<StatusBar barStyle="dark-content" />
 			<Portal>
 				<Dialog visible={visible} onDismiss={hideModal}>
 					<Dialog.Title>Error</Dialog.Title>

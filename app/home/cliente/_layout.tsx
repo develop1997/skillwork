@@ -1,3 +1,5 @@
+import { APP_VALUES } from "@/assets/styles/GeneralStyles";
+import { sizeNormalizer } from "@/assets/styles/normalizator";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
@@ -5,17 +7,19 @@ export default function HomeLayout() {
 	return (
 		<Tabs
 			screenOptions={{
-				tabBarActiveTintColor: "#fff",
+				tabBarActiveTintColor: APP_VALUES.colors.primary,
+				tabBarInactiveTintColor: APP_VALUES.colors.disabledTextDark,
 				tabBarStyle: {
-					backgroundColor: "#40346b",
+					backgroundColor: APP_VALUES.colors.secondary,
 					height: 60,
 				},
-
 				headerStyle: {
-					backgroundColor: "#1f1a30",
+					backgroundColor: APP_VALUES.colors.primary,
+					height: sizeNormalizer * 80,
 				},
 				headerTitleStyle: {
-					color: "white",
+					color: APP_VALUES.colors.secondary,
+					fontSize: sizeNormalizer * 30,
 				},
 				headerTitleAlign: "center",
 			}}

@@ -1,12 +1,12 @@
+import { APP_VALUES } from "@/assets/styles/GeneralStyles";
+import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
 import { Dimensions, StyleSheet } from "react-native";
-
-const windowWidth = Dimensions.get("window").width;
 export const WorkCardStyles = StyleSheet.create({
 	deformedBox: {
 		position: "relative",
-		width: (windowWidth * 0.90) - 10,
-		height: 170,
-		margin: 10
+		width: (windowWidth * 0.90) - sizeNormalizer * 10,
+		height: sizeNormalizer * 170,
+		margin: sizeNormalizer * 10
 	},
 	svg: {
 		position: "absolute",
@@ -17,39 +17,40 @@ export const WorkCardStyles = StyleSheet.create({
 	},
 	content: {
 		position: "absolute",
-		margin: 20,
+		margin: sizeNormalizer * 20,
 		top: 0,
 		left: 0,
 		right: 0,
 		bottom: 0,
 		display: "flex",
 		justifyContent: "flex-start",
-		paddingHorizontal: 20,
+		paddingHorizontal: sizeNormalizer * 20,
 	},
 	title: {
-		color: "#1fc8db",
+		color: APP_VALUES.colors.text,
 		fontWeight: "bold",
-		fontSize: 20,
-		lineHeight: 25,
-		marginBottom: 10,
+		fontSize: sizeNormalizer * 20,
+		lineHeight: sizeNormalizer * 25,
+		marginBottom: sizeNormalizer * 10,
 	},
 	text: {
-		color: "#fff",
-		fontSize: 16,
-		lineHeight: 20,
+		color: APP_VALUES.colors.text,
+		fontSize: sizeNormalizer * 16,
+		lineHeight: sizeNormalizer * 20,
 	},
 	button: {
-		marginVertical: 10,
+		marginVertical: sizeNormalizer * 10,
 		backgroundColor: "#D9D9D9",
 		width: "50%",
+		fontSize: sizeNormalizer * 16,
 		alignSelf: "center",
 	},
 	status: {
-		width: 20,
-		height: 20,
-		borderRadius: 10,
-		marginVertical: 10,
-		marginHorizontal: 20,
+		width: sizeNormalizer * 20,
+		height: sizeNormalizer * 20,
+		borderRadius: sizeNormalizer * 10,
+		marginVertical: sizeNormalizer * 10,
+		marginHorizontal: sizeNormalizer * 20,
 	},
 	textContainer: {
 		display: "flex",

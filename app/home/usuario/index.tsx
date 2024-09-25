@@ -12,7 +12,7 @@ interface HomeProps {}
 const Home: FunctionComponent<HomeProps> = () => {
 	return (
 		<>
-			<StatusBar barStyle="light-content" />
+			<StatusBar barStyle="dark-content" />
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<ScrollView
 					style={HomeGenerals.background}

@@ -81,7 +81,7 @@ export default function ForgotPassword() {
 		let error = undefined;
 		if (!isPasswordValid(newPassword)) {
 			error =
-				"Invalid password, minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character";
+				"Invalid password, minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character (@$!%*?&)";
 		} else {
 			ForgotPasswordReset(email, code, newPassword)
 				.then(() => {
@@ -105,9 +105,9 @@ export default function ForgotPassword() {
 
 	return (
 		<>
-			<StatusBar barStyle="light-content" />
+			<StatusBar barStyle="dark-content" />
 			<Portal>
-				<BackHeaderButton backgroundColor="#1f1a30" />
+				<BackHeaderButton />
 				<Dialog visible={visible} onDismiss={hideModal}>
 					<Dialog.Title>Error</Dialog.Title>
 					<Dialog.Content>

@@ -16,6 +16,8 @@ import {
 import { ProfileStyles } from "@/assets/styles/profile/ProfileStyles";
 import AuthInput from "@/components/StyledInput";
 import AuthButton from "@/components/StyledButton";
+import { sizeNormalizer } from "@/assets/styles/normalizator";
+import { APP_VALUES } from "@/assets/styles/GeneralStyles";
 
 interface ProfileProps {}
 
@@ -41,7 +43,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 
 	return (
 		<>
-			<StatusBar barStyle="light-content" />
+			<StatusBar barStyle="dark-content" />
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<ScrollView
 					style={HomeGenerals.background}
@@ -52,7 +54,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 						style={[
 							ProfileStyles.Horizontal,
 							{
-								marginTop: 30,
+								marginTop: sizeNormalizer * 30,
 							},
 						]}
 					>
@@ -68,9 +70,9 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							) : (
 								<View
 									style={{
-										padding: 20,
-										width: 100,
-										height: 100,
+										padding: sizeNormalizer * 20,
+										width: sizeNormalizer * 100,
+										height: sizeNormalizer * 100,
 										display: "flex",
 										justifyContent: "center",
 										alignItems: "center",
@@ -78,8 +80,8 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								>
 									<FontAwesome5
 										name="user-alt"
-										size={48}
-										color="white"
+										size={sizeNormalizer * 48}
+										color={APP_VALUES.colors.text}
 									/>
 								</View>
 							)}
@@ -87,7 +89,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 						<View
 							style={{
 								flex: 1,
-								marginLeft: 15,
+								marginLeft: sizeNormalizer * 15,
 							}}
 						>
 							<AuthInput
@@ -119,8 +121,8 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								icon={(props: any) => (
 									<FontAwesome
 										name="user"
-										size={34}
-										color="white"
+										size={sizeNormalizer * 34}
+										color={APP_VALUES.colors.text}
 									/>
 								)}
 							/>
@@ -177,7 +179,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 						style={[
 							ProfileStyles.Horizontal,
 							{
-								marginVertical: 30,
+								marginVertical: sizeNormalizer * 30,
 							},
 						]}
 					>

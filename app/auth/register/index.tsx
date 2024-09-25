@@ -13,6 +13,7 @@ import { Button, Dialog, Portal } from "react-native-paper";
 import { useNavigation } from "expo-router";
 import BackHeaderButton from "@/components/BackAction";
 import { isEmailValid, isPasswordValid } from "@/utils/forms/validate";
+import { sizeNormalizer } from "@/assets/styles/normalizator";
 
 type FormDataType = {
 	email?: string;
@@ -31,8 +32,8 @@ export default function Register() {
 	const hideModal = () => setVisible(false);
 
 	const onSubmit = () => {
-		if(loading) return
-		
+		if (loading) return;
+
 		setLoading(true);
 		let error = undefined;
 
@@ -50,7 +51,7 @@ export default function Register() {
 			error = "Invalid email";
 		} else if (!isPasswordValid(data?.password)) {
 			error =
-				"Invalid password, minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character";
+				"Invalid password, minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character (@$!%*?&)";
 		} else {
 			RegisterUser(data.email, data.password, data.role)
 				.then((res) => {
@@ -73,10 +74,9 @@ export default function Register() {
 
 	return (
 		<>
-			<StatusBar barStyle="light-content" />
-
+			<StatusBar barStyle="dark-content" />
 			<Portal>
-				<BackHeaderButton backgroundColor="#1f1a30" />
+				<BackHeaderButton />
 				<Dialog visible={visible} onDismiss={hideModal}>
 					<Dialog.Title>Error</Dialog.Title>
 					<Dialog.Content>
@@ -111,11 +111,8 @@ export default function Register() {
 						</View>
 						<View>
 							<Dropdown
-								backgroundColor="#40346b"
-								fontSize={26}
-								foregroundColor="#fff"
-								height={80}
-								roundness={25}
+								fontSize={sizeNormalizer * 26}
+								height={sizeNormalizer * 70}
 								data={[
 									{
 										title: "Cliente",
@@ -160,13 +157,20 @@ export default function Register() {
 										: ""
 								}
 								onChangeText={(value) =>
-									setData({ ...data, confirmPassword: value.trim() })
+									setData({
+										...data,
+										confirmPassword: value.trim(),
+									})
 								}
 							/>
 						</View>
 
 						<View style={GeneralStyles.centeredView}>
-							<AuthButton loading={loading} text="Registrarse" onPress={onSubmit} />
+							<AuthButton
+								loading={loading}
+								text="Registrarse"
+								onPress={onSubmit}
+							/>
 							<ThemedText
 								style={LoginStyles.loginText}
 								type="default"

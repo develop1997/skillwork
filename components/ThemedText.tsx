@@ -1,4 +1,6 @@
 import { Fonts } from '@/assets/fonts/fonts';
+import { APP_VALUES } from '@/assets/styles/GeneralStyles';
+import { sizeNormalizer } from '@/assets/styles/normalizator';
 import { Text, type TextProps, StyleSheet } from 'react-native';
 
 export type ThemedTextProps = TextProps & {
@@ -32,31 +34,32 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   default: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: sizeNormalizer * 16,
+    lineHeight:  sizeNormalizer * 24,
     fontFamily: Fonts.RobotoRegular,
   },
   defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: sizeNormalizer * 16,
+    lineHeight:  sizeNormalizer * 24,
     fontWeight: '600',
     fontFamily: Fonts.RobotoBold,
   },
   title: {
-    fontSize: 32,
+    fontSize: sizeNormalizer * 32,
+    lineHeight: sizeNormalizer * 32,
     fontWeight: 'bold',
-    lineHeight: 32,
     fontFamily: Fonts.RobotoBold,
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: sizeNormalizer * 20,
+    lineHeight: sizeNormalizer * 24,
     fontWeight: 'bold',
     fontFamily: Fonts.RobotoBold,
   },
   link: {
-    lineHeight: 30,
-    fontSize: 16,
-    color: '#0a7ea4',
+    fontSize: sizeNormalizer * 16,
+    lineHeight: sizeNormalizer * 24,
+		color: APP_VALUES.colors.secondary,
     fontFamily: Fonts.RobotoMedium,
   },
 });

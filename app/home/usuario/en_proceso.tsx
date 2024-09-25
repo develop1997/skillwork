@@ -12,7 +12,7 @@ interface InProgressProps {}
 const InProgress: FunctionComponent<InProgressProps> = () => {
 	return (
 		<>
-			<StatusBar barStyle="light-content" />
+			<StatusBar barStyle="dark-content" />
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<ScrollView
 					style={HomeGenerals.background}
