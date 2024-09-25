@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.skillwork.app"
+      "package": "com.skillwork.app",
+      "versionCode": 4
     },
     "web": {
       "bundler": "metro",
@@ -40,9 +41,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "fa6a9bd3-c2b5-4a07-ae89-622f09ba5ca3"
+        "projectId": "98cac73e-2a40-4564-9f4d-9704cc3bcabb"
       }
     },
-    "owner": "keiner5212"
+    "owner": "skillwork2024"
   }
 }
