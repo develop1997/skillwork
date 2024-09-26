@@ -1,5 +1,5 @@
 import { Entypo } from "@expo/vector-icons";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import { IconsObject } from "./Icons";
@@ -21,6 +21,8 @@ interface DropdownProps {
 	roundness?: number;
 	height: number;
 	fontSize: number;
+	resetAfterSelect?: boolean;
+	showIcon?: boolean;
 }
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
@@ -32,11 +34,23 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 	foregroundColor = APP_VALUES.colors.text,
 	roundness = sizeNormalizer * 25,
 	fontSize = sizeNormalizer * 26,
+	resetAfterSelect = false,
+	showIcon = true,
 }) => {
+	const dropdownRef = useRef<SelectDropdown>(null);
+	const clearSelect = () => {
+		dropdownRef.current?.reset();
+	};
 	return (
 		<SelectDropdown
+			ref={dropdownRef}
 			data={data}
-			onSelect={onSelect}
+			onSelect={(selectedItem: Item) => {
+				onSelect(selectedItem);
+				if (resetAfterSelect) {
+					clearSelect();
+				}
+			}}
 			renderButton={(selectedItem: Item, isOpened) => {
 				return (
 					<View
@@ -51,16 +65,18 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 					>
 						{selectedItem ? (
 							<>
-								<View
-									style={[
-										styles.dropdownButtonIconStyle,
-										{
-											fontSize: fontSize,
-										} as any,
-									]}
-								>
-									{IconsObject[selectedItem.icon]()}
-								</View>
+								{showIcon && (
+									<View
+										style={[
+											styles.dropdownButtonIconStyle,
+											{
+												fontSize: fontSize,
+											} as any,
+										]}
+									>
+										{IconsObject[selectedItem.icon]()}
+									</View>
+								)}
 								<Text
 									style={[
 										styles.dropdownButtonTxtStyle,
@@ -114,16 +130,18 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 							},
 						}}
 					>
-						<View
-							style={[
-								styles.dropdownButtonIconStyle,
-								{
-									fontSize: fontSize,
-								} as any,
-							]}
-						>
-							{IconsObject[item.icon]()}
-						</View>
+						{showIcon && (
+							<View
+								style={[
+									styles.dropdownButtonIconStyle,
+									{
+										fontSize: fontSize,
+									} as any,
+								]}
+							>
+								{IconsObject[item.icon]()}
+							</View>
+						)}
 						<Text
 							style={[
 								styles.dropdownItemTxtStyle,

@@ -1,5 +1,10 @@
 import { RolesConstants } from "@/constants/Roles";
-import { RootStoreType, RootatoreKeys, deleteFromSecureStore, useRootStore } from "@/store/RootStore";
+import {
+	RootStoreType,
+	RootatoreKeys,
+	deleteFromSecureStore,
+	useRootStore,
+} from "@/store/RootStore";
 import { Redirect, useNavigation } from "expo-router";
 import { FunctionComponent, useEffect } from "react";
 
@@ -7,10 +12,7 @@ interface HomeProps {}
 
 const Home: FunctionComponent<HomeProps> = () => {
 	const user_role = useRootStore((state: RootStoreType) => state.user_role);
-	const router = useNavigation()
-	const setSesion_token = useRootStore(
-		(state: RootStoreType) => state.setSesion_token
-	);
+	const router = useNavigation();
 
 	const setUser_role = useRootStore(
 		(state: RootStoreType) => state.setUser_role
@@ -19,7 +21,6 @@ const Home: FunctionComponent<HomeProps> = () => {
 	const handleLogout = async () => {
 		deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
 			deleteFromSecureStore(RootatoreKeys.USER_ROLE).then(() => {
-				setSesion_token(undefined);
 				setUser_role(undefined);
 				router?.goBack();
 			});

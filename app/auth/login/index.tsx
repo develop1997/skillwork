@@ -34,16 +34,12 @@ export default function Login() {
 	const [verifying, setVerifying] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const hideModal = () => setVisible(false);
-	const setSesion_token = useRootStore(
-		(state: RootStoreType) => state.setSesion_token
-	);
+	
 	const setUser_role = useRootStore(
 		(state: RootStoreType) => state.setUser_role
 	);
 
-	const sesion_token = useRootStore(
-		(state: RootStoreType) => state.sesion_token
-	);
+	const [sesion_token, setSesion_token] = useState<string | undefined>(); 
 
 	const user_role = useRootStore((state: RootStoreType) => state.user_role);
 

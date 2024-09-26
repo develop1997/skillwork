@@ -1,6 +1,6 @@
 import { HomeGenerals } from "@/assets/styles/home/HomeGenerals";
 import WorkCard from "@/components/workCards/WorkCard";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { StatusBar } from "react-native";
 import {
 	GestureHandlerRootView,

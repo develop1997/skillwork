@@ -6,7 +6,7 @@ import {
 	useRootStore,
 } from "@/store/RootStore";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
+import { useRouter } from "expo-router";
 import { FunctionComponent } from "react";
 import { Image, StatusBar, View } from "react-native";
 import {
@@ -22,10 +22,7 @@ import { APP_VALUES } from "@/assets/styles/GeneralStyles";
 interface ProfileProps {}
 
 const Profile: FunctionComponent<ProfileProps> = () => {
-	const router = useNavigation().getParent();
-	const setSesion_token = useRootStore(
-		(state: RootStoreType) => state.setSesion_token
-	);
+	const router = useRouter();
 
 	const setUser_role = useRootStore(
 		(state: RootStoreType) => state.setUser_role
@@ -34,9 +31,8 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	const handleLogout = async () => {
 		deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
 			deleteFromSecureStore(RootatoreKeys.USER_ROLE).then(() => {
-				setSesion_token(undefined);
 				setUser_role(undefined);
-				router?.navigate("auth");
+				router.replace("/auth/login");
 			});
 		});
 	};
@@ -146,32 +142,6 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							<AuthInput
 								placeholder="Correo electronico"
 								icon="email"
-							/>
-						</View>
-					</View>
-					<View style={ProfileStyles.Horizontal}>
-						<View
-							style={{
-								flex: 1,
-							}}
-						>
-							<AuthInput
-								placeholder="Categorias"
-								numberOfLines={3}
-								icon="tag"
-							/>
-						</View>
-					</View>
-					<View style={ProfileStyles.Horizontal}>
-						<View
-							style={{
-								flex: 1,
-							}}
-						>
-							<AuthInput
-								placeholder="Servicios"
-								numberOfLines={3}
-								icon="cog"
 							/>
 						</View>
 					</View>

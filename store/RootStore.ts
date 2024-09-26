@@ -16,9 +16,7 @@ export async function deleteFromSecureStore(key: string) {
 }
 
 export interface RootStoreType {
-    sesion_token?: string
     user_role?: number
-    setSesion_token: (sesion_token: string | undefined) => void
     setUser_role: (user_role: number | undefined) => void
 }
 
@@ -29,9 +27,7 @@ export class RootatoreKeys {
 }
 
 export const useRootStore = create<RootStoreType>((set) => ({
-    sesion_token: undefined,
     user_role: undefined,
-    setSesion_token: (sesion_token: string | undefined) => set((state: RootStoreType) => ({ ...state, sesion_token })),
     setUser_role: (user_role: number | undefined) => set((state: RootStoreType) => ({ ...state, user_role })),
 }))
 

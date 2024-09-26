@@ -6,8 +6,7 @@ import {
 	useRootStore,
 } from "@/store/RootStore";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { Image, StatusBar, View } from "react-native";
 import {
 	GestureHandlerRootView,
@@ -18,14 +17,14 @@ import AuthInput from "@/components/StyledInput";
 import AuthButton from "@/components/StyledButton";
 import { sizeNormalizer } from "@/assets/styles/normalizator";
 import { APP_VALUES } from "@/assets/styles/GeneralStyles";
+import Dropdown from "@/components/Dropdown";
+import { getCategories } from "@/api/Profile/CategoriesAndServices";
+import { useRouter } from "expo-router";
 
 interface ProfileProps {}
 
 const Profile: FunctionComponent<ProfileProps> = () => {
-	const router = useNavigation().getParent();
-	const setSesion_token = useRootStore(
-		(state: RootStoreType) => state.setSesion_token
-	);
+	const router = useRouter();
 
 	const setUser_role = useRootStore(
 		(state: RootStoreType) => state.setUser_role
@@ -34,12 +33,29 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	const handleLogout = async () => {
 		deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
 			deleteFromSecureStore(RootatoreKeys.USER_ROLE).then(() => {
-				setSesion_token(undefined);
 				setUser_role(undefined);
-				router?.navigate("auth");
+				router.replace("/auth/login");
 			});
 		});
 	};
+
+	const [services, setServices] = useState<string[]>([]);
+	const [servicesSelected, setServicesSelected] = useState<string[]>([]);
+
+	const [categories, setCategories] = useState<string[]>([]);
+	const [categoriesSelected, setCategoriesSelected] = useState<string[]>([]);
+
+	useEffect(() => {
+		getCategories()
+			.then((res) => {
+				setCategories(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
+
+	console.log(categoriesSelected);
 
 	return (
 		<>
@@ -160,6 +176,24 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								numberOfLines={3}
 								icon="tag"
 							/>
+							<Dropdown
+								height={sizeNormalizer * 70}
+								fontSize={sizeNormalizer * 26}
+								textDefault="Agrega una Categoria"
+								data={categories.map((c) => ({
+									title: c,
+									value: c,
+									icon: "tag",
+								}))}
+								onSelect={(item) => {
+									setCategoriesSelected((prev) => [
+										...prev,
+										item.value,
+									]);
+								}}
+								resetAfterSelect={true}
+								showIcon={false}
+							/>
 						</View>
 					</View>
 					<View style={ProfileStyles.Horizontal}>
@@ -172,6 +206,24 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								placeholder="Servicios"
 								numberOfLines={3}
 								icon="cog"
+							/>
+							<Dropdown
+								height={sizeNormalizer * 70}
+								fontSize={sizeNormalizer * 26}
+								textDefault="Agrega un Servicio"
+								data={services.map((c) => ({
+									title: c,
+									value: c,
+									icon: "tag",
+								}))}
+								onSelect={(item) => {
+									setServicesSelected((prev) => [
+										...prev,
+										item.value,
+									]);
+								}}
+								resetAfterSelect={true}
+								showIcon={false}
 							/>
 						</View>
 					</View>
