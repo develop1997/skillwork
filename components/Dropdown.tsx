@@ -33,7 +33,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 	backgroundColor = APP_VALUES.colors.tertiary,
 	foregroundColor = APP_VALUES.colors.text,
 	roundness = sizeNormalizer * 25,
-	fontSize = sizeNormalizer * 26,
+	fontSize = sizeNormalizer * 22,
 	resetAfterSelect = false,
 	showIcon = true,
 }) => {
@@ -107,13 +107,13 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 						{isOpened ? (
 							<Entypo
 								name="chevron-up"
-								size={sizeNormalizer * 24}
+								size={fontSize}
 								color={foregroundColor}
 							/>
 						) : (
 							<Entypo
 								name="chevron-down"
-								size={sizeNormalizer * 24}
+								size={fontSize}
 								color={foregroundColor}
 							/>
 						)}

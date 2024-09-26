@@ -29,7 +29,6 @@ export function configureAxios(token: string, logOut: () => void) {
 				return response;
 			},
 			(error) => {
-				const { logOut } = useAuth();
 				if (error.response.status === 403) {
 					logOut();
 				}

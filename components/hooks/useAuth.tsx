@@ -30,9 +30,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
 
 	useEffect(() => {
-		readFromSecureStore(RootatoreKeys.SESION_TOKEN).then((token) => {
-			setToken(token);
-		});
+		setInterval(() => {
+			readFromSecureStore(RootatoreKeys.SESION_TOKEN).then((token) => {
+				setToken(token);
+			});
+		}, 1000);
 	}, []);
 
 	const logOut = () => {

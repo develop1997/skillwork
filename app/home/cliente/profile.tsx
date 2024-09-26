@@ -5,7 +5,7 @@ import {
 	deleteFromSecureStore,
 	useRootStore,
 } from "@/store/RootStore";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { FunctionComponent, useEffect, useState } from "react";
 import { Image, StatusBar, View } from "react-native";
 import {
@@ -16,10 +16,15 @@ import { ProfileStyles } from "@/assets/styles/profile/ProfileStyles";
 import AuthInput from "@/components/StyledInput";
 import AuthButton from "@/components/StyledButton";
 import { sizeNormalizer } from "@/assets/styles/normalizator";
-import { APP_VALUES } from "@/assets/styles/GeneralStyles";
+import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
 import Dropdown from "@/components/Dropdown";
-import { getCategories } from "@/api/Profile/CategoriesAndServices";
+import {
+	getCategories,
+	getServices,
+} from "@/api/Profile/CategoriesAndServices";
 import { useRouter } from "expo-router";
+import { Chip } from "react-native-paper";
+import { IconText } from "@/components/IconText";
 
 interface ProfileProps {}
 
@@ -55,7 +60,17 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 			});
 	}, []);
 
-	console.log(categoriesSelected);
+	useEffect(() => {
+		getServices(categoriesSelected)
+			.then((res) => {
+				setServices(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [categoriesSelected]);
+
+	const onEditProfile = () => {};
 
 	return (
 		<>
@@ -137,7 +152,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								icon={(props: any) => (
 									<FontAwesome
 										name="user"
-										size={sizeNormalizer * 34}
+										size={sizeNormalizer * 32}
 										color={APP_VALUES.colors.text}
 									/>
 								)}
@@ -171,14 +186,10 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								flex: 1,
 							}}
 						>
-							<AuthInput
-								placeholder="Categorias"
-								numberOfLines={3}
-								icon="tag"
-							/>
+							<IconText icon="tag" text="Categorias" />
 							<Dropdown
 								height={sizeNormalizer * 70}
-								fontSize={sizeNormalizer * 26}
+								fontSize={sizeNormalizer * 22}
 								textDefault="Agrega una Categoria"
 								data={categories.map((c) => ({
 									title: c,
@@ -186,14 +197,52 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									icon: "tag",
 								}))}
 								onSelect={(item) => {
-									setCategoriesSelected((prev) => [
-										...prev,
-										item.value,
-									]);
+									if (
+										!categoriesSelected.includes(item.value)
+									) {
+										setCategoriesSelected((prev) => [
+											...prev,
+											item.value,
+										]);
+									}
 								}}
 								resetAfterSelect={true}
 								showIcon={false}
 							/>
+							<View
+								style={[
+									GeneralStyles.horizontalWrap,
+									{
+										marginBottom: sizeNormalizer * 20,
+									},
+								]}
+							>
+								{categoriesSelected.map((c) => (
+									<Chip
+										key={c}
+										mode="outlined"
+										textStyle={{
+											fontSize: sizeNormalizer * 20,
+										}}
+										onClose={() => {
+											setCategoriesSelected(
+												categoriesSelected.filter(
+													(cc) => cc !== c
+												)
+											);
+										}}
+										closeIcon={() => (
+											<Entypo
+												name="cross"
+												size={sizeNormalizer * 20}
+												color={APP_VALUES.colors.text}
+											/>
+										)}
+									>
+										{c}
+									</Chip>
+								))}
+							</View>
 						</View>
 					</View>
 					<View style={ProfileStyles.Horizontal}>
@@ -202,14 +251,10 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								flex: 1,
 							}}
 						>
-							<AuthInput
-								placeholder="Servicios"
-								numberOfLines={3}
-								icon="cog"
-							/>
+							<IconText icon="cog" text="Servicios" />
 							<Dropdown
 								height={sizeNormalizer * 70}
-								fontSize={sizeNormalizer * 26}
+								fontSize={sizeNormalizer * 22}
 								textDefault="Agrega un Servicio"
 								data={services.map((c) => ({
 									title: c,
@@ -217,14 +262,54 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									icon: "tag",
 								}))}
 								onSelect={(item) => {
-									setServicesSelected((prev) => [
-										...prev,
-										item.value,
-									]);
+									if (
+										!servicesSelected.includes(item.value)
+									) {
+										setServicesSelected((prev) => [
+											...prev,
+											item.value,
+										]);
+									}
 								}}
 								resetAfterSelect={true}
 								showIcon={false}
 							/>
+
+							<View
+								style={[
+									GeneralStyles.horizontalWrap,
+									{
+										marginBottom: sizeNormalizer * 20,
+									},
+								]}
+							>
+								{servicesSelected.map((c) => (
+									<Chip
+										key={c}
+										mode="outlined"
+										textStyle={{
+											fontSize: sizeNormalizer * 20,
+
+										}}
+										onClose={() => {
+											setServicesSelected(
+												categoriesSelected.filter(
+													(cc) => cc !== c
+												)
+											);
+										}}
+										closeIcon={() => (
+											<Entypo
+												name="cross"
+												size={sizeNormalizer * 20}
+												color={APP_VALUES.colors.text}
+											/>
+										)}
+									>
+										{c}
+									</Chip>
+								))}
+							</View>
 						</View>
 					</View>
 					<View
@@ -235,7 +320,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							},
 						]}
 					>
-						<AuthButton text="Editar" onPress={() => {}} />
+						<AuthButton text="Editar" onPress={onEditProfile} />
 						<AuthButton
 							text="Cerrar sesion"
 							onPress={handleLogout}

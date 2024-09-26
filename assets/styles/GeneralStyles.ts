@@ -6,6 +6,17 @@ export const GeneralStyles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
+	horizontal: {
+		display: "flex",
+		gap: 10,
+		flexDirection: "row",
+	},
+	horizontalWrap: {
+		display: "flex",
+		flexDirection: "row",
+		flexWrap: "wrap",
+		gap: 10,
+	}
 });
 
 export const APP_VALUES = {

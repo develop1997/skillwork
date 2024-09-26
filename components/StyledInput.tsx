@@ -30,7 +30,7 @@ const AuthInput: FunctionComponent<AuthInputProps> = ({
 				marginVertical: sizeNormalizer * 15,
 				borderRadius: sizeNormalizer * 25,
 				backgroundColor: APP_VALUES.colors.tertiary,
-				fontSize: sizeNormalizer * 24,
+				fontSize: sizeNormalizer * 22,
 				lineHeight: sizeNormalizer * 26,
 				minHeight: sizeNormalizer * 70,
 			}}
@@ -54,7 +54,7 @@ const AuthInput: FunctionComponent<AuthInputProps> = ({
 					<TextInput.Icon
 					icon={icon}
 					color={APP_VALUES.colors.text}
-					size={sizeNormalizer * 36}
+					size={sizeNormalizer * 32}
 				/>
 				)
 			}
