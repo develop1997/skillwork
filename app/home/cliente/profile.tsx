@@ -7,7 +7,7 @@ import {
 } from "@/store/RootStore";
 import { Entypo, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { FunctionComponent, useEffect, useState } from "react";
-import { Image, StatusBar, View } from "react-native";
+import { Alert, Image, StatusBar, TouchableOpacity, View } from "react-native";
 import {
 	GestureHandlerRootView,
 	ScrollView,
@@ -22,33 +22,37 @@ import {
 	getCategories,
 	getServices,
 } from "@/api/Profile/CategoriesAndServices";
-import { useRouter } from "expo-router";
 import { Chip } from "react-native-paper";
 import { IconText } from "@/components/IconText";
+import { useAuth } from "@/components/hooks/useAuth";
+import { GetUserData, UpdateUserData } from "@/api/Profile/userData";
+import {
+	MediaTypeOptions,
+	launchImageLibraryAsync,
+	requestMediaLibraryPermissionsAsync,
+} from "expo-image-picker";
+import { uriToBuffer } from "@/utils/files/Image";
 
 interface ProfileProps {}
 
 const Profile: FunctionComponent<ProfileProps> = () => {
-	const router = useRouter();
-
-	const setUser_role = useRootStore(
-		(state: RootStoreType) => state.setUser_role
-	);
-
-	const handleLogout = async () => {
-		deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
-			deleteFromSecureStore(RootatoreKeys.USER_ROLE).then(() => {
-				setUser_role(undefined);
-				router.replace("/auth/login");
-			});
-		});
-	};
+	const { logOut } = useAuth();
 
 	const [services, setServices] = useState<string[]>([]);
 	const [servicesSelected, setServicesSelected] = useState<string[]>([]);
 
 	const [categories, setCategories] = useState<string[]>([]);
 	const [categoriesSelected, setCategoriesSelected] = useState<string[]>([]);
+
+	const { userData } = useRootStore();
+
+	const [formData, setFormData] = useState<any>({
+		name: "",
+		description: "",
+		email: "",
+		phone: "",
+		image: null,
+	});
 
 	useEffect(() => {
 		getCategories()
@@ -61,16 +65,96 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	}, []);
 
 	useEffect(() => {
-		getServices(categoriesSelected)
-			.then((res) => {
-				setServices(res);
-			})
-			.catch((err) => {
-				console.log(err);
+		if (userData) {
+			if (userData.categories) setCategoriesSelected(userData.categories);
+			if (userData.services) setServicesSelected(userData.services);
+
+			setFormData({
+				name: userData.name || "",
+				description: userData.description || "",
+				email: userData.email || "",
+				phone: userData.phone || "",
+				image: userData.image || null,
 			});
+		}
+	}, [userData]);
+
+	useEffect(() => {
+		if (categoriesSelected.length == 0) {
+			setServices([]);
+		} else {
+			getServices(categoriesSelected)
+				.then((res) => {
+					setServices(res);
+				})
+				.catch((err) => {
+					setServices([]);
+				});
+		}
 	}, [categoriesSelected]);
 
-	const onEditProfile = () => {};
+	const [loading, setLoading] = useState(false);
+	const onEditProfile = async () => {
+		const data: any = {};
+		setLoading(true);
+		// only email is required (login)
+		if (!formData.email) {
+			Alert.alert("Error", "Email Cannot be empty");
+		}
+
+		data["name"] = formData.name;
+		data["description"] = formData.description;
+		data["email"] = formData.email;
+		data["phone"] = formData.phone;
+
+		// if there is an image, convert it into a File
+		if (!formData.image.startsWith("http")) {
+			const imageFile = await uriToBuffer(formData.image);
+
+			if (imageFile) {
+				data["image"] = imageFile;
+			}
+		}
+
+		data["categories"] = categoriesSelected;
+		data["services"] = servicesSelected;
+
+		UpdateUserData(data)
+			.then((res) => {
+				Alert.alert("Success", "Profile updated successfully");
+				setLoading(false);
+			})
+			.catch((err) => {
+				Alert.alert("Error", err.message);
+				setFormData({
+					name: userData.name || "",
+					description: userData.description || "",
+					email: userData.email || "",
+					phone: userData.phone || "",
+					image: userData.image || null,
+				});
+				if (userData.categories)
+					setCategoriesSelected(userData.categories);
+				if (userData.services) setServicesSelected(userData.services);
+				setLoading(false);
+			});
+	};
+
+	const onSelectImage = async () => {
+		const { status } = await requestMediaLibraryPermissionsAsync();
+		if (status == "granted") {
+			let result = await launchImageLibraryAsync({
+				mediaTypes: MediaTypeOptions.Images,
+				allowsEditing: true,
+				aspect: [4, 3],
+				quality: 1,
+			});
+
+			if (!result.canceled) {
+				setFormData({ ...formData, image: result.assets[0].uri });
+			}
+		}
+	};
 
 	return (
 		<>
@@ -89,13 +173,15 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							},
 						]}
 					>
-						<View style={ProfileStyles.profileItem}>
-							{false ? (
+						<TouchableOpacity
+							style={ProfileStyles.profileItem}
+							onPress={onSelectImage}
+						>
+							{formData.image && formData.image != "" ? (
 								<Image
 									style={ProfileStyles.profileImage}
 									source={{
-										uri:
-											"https://cdn.shopify.com/s/files/1/0273/8080/9781/products/shocked_face_meme_green_screen_creatorset.mp4_2023-01-27_03-57-29.901.jpg?v=1674791979",
+										uri: formData.image,
 									}}
 								/>
 							) : (
@@ -116,7 +202,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									/>
 								</View>
 							)}
-						</View>
+						</TouchableOpacity>
 						<View
 							style={{
 								flex: 1,
@@ -126,18 +212,13 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							<AuthInput
 								placeholder="Descripción"
 								numberOfLines={2}
-							/>
-						</View>
-					</View>
-					<View style={ProfileStyles.Horizontal}>
-						<View
-							style={{
-								flex: 1,
-							}}
-						>
-							<AuthInput
-								placeholder="Tipo de identificación"
-								icon="id-card"
+								value={formData.description}
+								onChangeText={(value: string) => {
+									setFormData({
+										...formData,
+										description: value,
+									});
+								}}
 							/>
 						</View>
 					</View>
@@ -156,6 +237,10 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 										color={APP_VALUES.colors.text}
 									/>
 								)}
+								value={formData.name}
+								onChangeText={(value: string) => {
+									setFormData({ ...formData, name: value });
+								}}
 							/>
 						</View>
 					</View>
@@ -165,7 +250,14 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								flex: 1,
 							}}
 						>
-							<AuthInput placeholder="Telefono" icon="phone" />
+							<AuthInput
+								placeholder="Telefono"
+								icon="phone"
+								value={formData.phone}
+								onChangeText={(value: string) => {
+									setFormData({ ...formData, phone: value });
+								}}
+							/>
 						</View>
 					</View>
 					<View style={ProfileStyles.Horizontal}>
@@ -177,6 +269,13 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							<AuthInput
 								placeholder="Correo electronico"
 								icon="email"
+								value={formData.email}
+								onChangeText={(value: string) => {
+									setFormData({
+										...formData,
+										email: value.trim(),
+									});
+								}}
 							/>
 						</View>
 					</View>
@@ -187,28 +286,33 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							}}
 						>
 							<IconText icon="tag" text="Categorias" />
-							<Dropdown
-								height={sizeNormalizer * 70}
-								fontSize={sizeNormalizer * 22}
-								textDefault="Agrega una Categoria"
-								data={categories.map((c) => ({
-									title: c,
-									value: c,
-									icon: "tag",
-								}))}
-								onSelect={(item) => {
-									if (
-										!categoriesSelected.includes(item.value)
-									) {
-										setCategoriesSelected((prev) => [
-											...prev,
-											item.value,
-										]);
-									}
-								}}
-								resetAfterSelect={true}
-								showIcon={false}
-							/>
+							{categories && (
+								<Dropdown
+									height={sizeNormalizer * 70}
+									fontSize={sizeNormalizer * 22}
+									textDefault="Agrega una Categoria"
+									data={categories.map((c) => ({
+										title: c,
+										value: c,
+										icon: "tag",
+									}))}
+									onSelect={(item) => {
+										if (
+											!categoriesSelected.includes(
+												item.value
+											)
+										) {
+											setCategoriesSelected((prev) => [
+												...prev,
+												item.value,
+											]);
+										}
+									}}
+									resetAfterSelect={true}
+									showIcon={false}
+								/>
+							)}
+
 							<View
 								style={[
 									GeneralStyles.horizontalWrap,
@@ -217,31 +321,34 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									},
 								]}
 							>
-								{categoriesSelected.map((c) => (
-									<Chip
-										key={c}
-										mode="outlined"
-										textStyle={{
-											fontSize: sizeNormalizer * 20,
-										}}
-										onClose={() => {
-											setCategoriesSelected(
-												categoriesSelected.filter(
-													(cc) => cc !== c
-												)
-											);
-										}}
-										closeIcon={() => (
-											<Entypo
-												name="cross"
-												size={sizeNormalizer * 20}
-												color={APP_VALUES.colors.text}
-											/>
-										)}
-									>
-										{c}
-									</Chip>
-								))}
+								{categoriesSelected &&
+									categoriesSelected.map((c) => (
+										<Chip
+											key={c}
+											mode="outlined"
+											textStyle={{
+												fontSize: sizeNormalizer * 20,
+											}}
+											onClose={() => {
+												setCategoriesSelected(
+													categoriesSelected.filter(
+														(cc) => cc !== c
+													)
+												);
+											}}
+											closeIcon={() => (
+												<Entypo
+													name="cross"
+													size={sizeNormalizer * 20}
+													color={
+														APP_VALUES.colors.text
+													}
+												/>
+											)}
+										>
+											{c}
+										</Chip>
+									))}
 							</View>
 						</View>
 					</View>
@@ -252,28 +359,32 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							}}
 						>
 							<IconText icon="cog" text="Servicios" />
-							<Dropdown
-								height={sizeNormalizer * 70}
-								fontSize={sizeNormalizer * 22}
-								textDefault="Agrega un Servicio"
-								data={services.map((c) => ({
-									title: c,
-									value: c,
-									icon: "tag",
-								}))}
-								onSelect={(item) => {
-									if (
-										!servicesSelected.includes(item.value)
-									) {
-										setServicesSelected((prev) => [
-											...prev,
-											item.value,
-										]);
-									}
-								}}
-								resetAfterSelect={true}
-								showIcon={false}
-							/>
+							{services && (
+								<Dropdown
+									height={sizeNormalizer * 70}
+									fontSize={sizeNormalizer * 22}
+									textDefault="Agrega un Servicio"
+									data={services.map((c) => ({
+										title: c,
+										value: c,
+										icon: "tag",
+									}))}
+									onSelect={(item) => {
+										if (
+											!servicesSelected.includes(
+												item.value
+											)
+										) {
+											setServicesSelected((prev) => [
+												...prev,
+												item.value,
+											]);
+										}
+									}}
+									resetAfterSelect={true}
+									showIcon={false}
+								/>
+							)}
 
 							<View
 								style={[
@@ -283,32 +394,34 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									},
 								]}
 							>
-								{servicesSelected.map((c) => (
-									<Chip
-										key={c}
-										mode="outlined"
-										textStyle={{
-											fontSize: sizeNormalizer * 20,
-
-										}}
-										onClose={() => {
-											setServicesSelected(
-												categoriesSelected.filter(
-													(cc) => cc !== c
-												)
-											);
-										}}
-										closeIcon={() => (
-											<Entypo
-												name="cross"
-												size={sizeNormalizer * 20}
-												color={APP_VALUES.colors.text}
-											/>
-										)}
-									>
-										{c}
-									</Chip>
-								))}
+								{servicesSelected &&
+									servicesSelected.map((c) => (
+										<Chip
+											key={c}
+											mode="outlined"
+											textStyle={{
+												fontSize: sizeNormalizer * 20,
+											}}
+											onClose={() => {
+												setServicesSelected(
+													categoriesSelected.filter(
+														(cc) => cc !== c
+													)
+												);
+											}}
+											closeIcon={() => (
+												<Entypo
+													name="cross"
+													size={sizeNormalizer * 20}
+													color={
+														APP_VALUES.colors.text
+													}
+												/>
+											)}
+										>
+											{c}
+										</Chip>
+									))}
 							</View>
 						</View>
 					</View>
@@ -320,10 +433,14 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							},
 						]}
 					>
-						<AuthButton text="Editar" onPress={onEditProfile} />
+						<AuthButton
+							text="Editar"
+							loading={loading}
+							onPress={onEditProfile}
+						/>
 						<AuthButton
 							text="Cerrar sesion"
-							onPress={handleLogout}
+							onPress={logOut}
 							primaryColor="#ff5252"
 							secondaryColor="#fff"
 						/>

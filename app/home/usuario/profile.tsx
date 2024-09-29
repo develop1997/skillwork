@@ -1,14 +1,7 @@
 import { HomeGenerals } from "@/assets/styles/home/HomeGenerals";
-import {
-	RootStoreType,
-	RootatoreKeys,
-	deleteFromSecureStore,
-	useRootStore,
-} from "@/store/RootStore";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { FunctionComponent } from "react";
-import { Image, StatusBar, View } from "react-native";
+import { FunctionComponent, useEffect, useState } from "react";
+import { Alert, Image, StatusBar, TouchableOpacity, View } from "react-native";
 import {
 	GestureHandlerRootView,
 	ScrollView,
@@ -18,23 +11,106 @@ import AuthInput from "@/components/StyledInput";
 import AuthButton from "@/components/StyledButton";
 import { sizeNormalizer } from "@/assets/styles/normalizator";
 import { APP_VALUES } from "@/assets/styles/GeneralStyles";
+import { useAuth } from "@/components/hooks/useAuth";
+import { GetUserData, UpdateUserData } from "@/api/Profile/userData";
+import { useRootStore } from "@/store/RootStore";
+import { uriToBuffer } from "@/utils/files/Image";
+import {
+	MediaTypeOptions,
+	launchImageLibraryAsync,
+	requestMediaLibraryPermissionsAsync,
+} from "expo-image-picker";
 
 interface ProfileProps {}
 
 const Profile: FunctionComponent<ProfileProps> = () => {
-	const router = useRouter();
+	const { logOut } = useAuth();
 
-	const setUser_role = useRootStore(
-		(state: RootStoreType) => state.setUser_role
-	);
+	const { userData } = useRootStore();
 
-	const handleLogout = async () => {
-		deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
-			deleteFromSecureStore(RootatoreKeys.USER_ROLE).then(() => {
-				setUser_role(undefined);
-				router.replace("/auth/login");
+	const [formData, setFormData] = useState<any>({
+		name: "",
+		description: "",
+		email: "",
+		phone: "",
+		image: null,
+		document: "",
+		document_type: "",
+	});
+
+	useEffect(() => {
+		if (userData) {
+			setFormData({
+				name: userData.name || "",
+				description: userData.description || "",
+				email: userData.email || "",
+				phone: userData.phone || "",
+				image: userData.image || null,
+				document: userData.document || "",
+				document_type: userData.document_type || "",
 			});
-		});
+		}
+	}, [userData]);
+
+	const [loading, setLoading] = useState(false);
+	const onEditProfile = async () => {
+		const data: any = {};
+		setLoading(true);
+		// only email is required (login)
+		if (!formData.email) {
+			Alert.alert("Error", "Email Cannot be empty");
+		}
+
+		data["name"] = formData.name;
+		data["description"] = formData.description;
+		data["email"] = formData.email;
+		data["phone"] = formData.phone;
+		data["document"] = formData.document;
+		data["document_type"] = formData.document_type;
+
+		// if there is an image, convert it into a File
+		if (!formData.image.startsWith("http")) {
+			const imageFile = await uriToBuffer(formData.image);
+
+			if (imageFile) {
+				data["image"] = imageFile;
+			}
+		}
+
+		UpdateUserData(data)
+			.then((res) => {
+				Alert.alert("Success", "Profile updated successfully");
+				setLoading(false);
+			})
+			.catch((err) => {
+				Alert.alert("Error", err.message);
+				setFormData({
+					name: userData.name || "",
+					description: userData.description || "",
+					email: userData.email || "",
+					phone: userData.phone || "",
+					image: userData.image || null,
+					document: userData.document || "",
+					document_type: userData.document_type || "",
+				});
+				setLoading(false);
+			});
+	};
+
+	const onSelectImage = async () => {
+		const { status } = await requestMediaLibraryPermissionsAsync();
+		if (status == "granted") {
+			let result = await launchImageLibraryAsync({
+				mediaTypes: MediaTypeOptions.Images,
+				allowsEditing: true,
+				aspect: [4, 3],
+				quality: 1,
+			});
+
+			if (!result.canceled) {
+				setFormData({ ...formData, image: result.assets[0].uri });
+			}
+		}
 	};
 
 	return (
@@ -54,13 +130,15 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							},
 						]}
 					>
-						<View style={ProfileStyles.profileItem}>
-							{false ? (
+						<TouchableOpacity
+							style={ProfileStyles.profileItem}
+							onPress={onSelectImage}
+						>
+							{formData.image && formData.image != "" ? (
 								<Image
 									style={ProfileStyles.profileImage}
 									source={{
-										uri:
-											"https://cdn.shopify.com/s/files/1/0273/8080/9781/products/shocked_face_meme_green_screen_creatorset.mp4_2023-01-27_03-57-29.901.jpg?v=1674791979",
+										uri: formData.image,
 									}}
 								/>
 							) : (
@@ -81,7 +159,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									/>
 								</View>
 							)}
-						</View>
+						</TouchableOpacity>
 						<View
 							style={{
 								flex: 1,
@@ -91,6 +169,13 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							<AuthInput
 								placeholder="Descripción"
 								numberOfLines={2}
+								value={formData.description}
+								onChangeText={(value: string) => {
+									setFormData({
+										...formData,
+										description: value,
+									});
+								}}
 							/>
 						</View>
 					</View>
@@ -103,6 +188,32 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							<AuthInput
 								placeholder="Tipo de identificación"
 								icon="id-card"
+								value={formData.document_type}
+								onChangeText={(value: string) => {
+									setFormData({
+										...formData,
+										document_type: value,
+									});
+								}}
+							/>
+						</View>
+					</View>
+					<View style={ProfileStyles.Horizontal}>
+						<View
+							style={{
+								flex: 1,
+							}}
+						>
+							<AuthInput
+								placeholder="Numero de identificación"
+								icon="id-card"
+								value={formData.document}
+								onChangeText={(value: string) => {
+									setFormData({
+										...formData,
+										document: value,
+									});
+								}}
 							/>
 						</View>
 					</View>
@@ -121,6 +232,10 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 										color={APP_VALUES.colors.text}
 									/>
 								)}
+								value={formData.name}
+								onChangeText={(value: string) => {
+									setFormData({ ...formData, name: value });
+								}}
 							/>
 						</View>
 					</View>
@@ -130,7 +245,14 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								flex: 1,
 							}}
 						>
-							<AuthInput placeholder="Telefono" icon="phone" />
+							<AuthInput
+								placeholder="Telefono"
+								icon="phone"
+								value={formData.phone}
+								onChangeText={(value: string) => {
+									setFormData({ ...formData, phone: value });
+								}}
+							/>
 						</View>
 					</View>
 					<View style={ProfileStyles.Horizontal}>
@@ -142,6 +264,13 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							<AuthInput
 								placeholder="Correo electronico"
 								icon="email"
+								value={formData.email}
+								onChangeText={(value: string) => {
+									setFormData({
+										...formData,
+										email: value.trim(),
+									});
+								}}
 							/>
 						</View>
 					</View>
@@ -153,10 +282,14 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							},
 						]}
 					>
-						<AuthButton text="Editar" onPress={() => {}} />
+						<AuthButton
+							text="Editar"
+							loading={loading}
+							onPress={onEditProfile}
+						/>
 						<AuthButton
 							text="Cerrar sesion"
-							onPress={handleLogout}
+							onPress={logOut}
 							primaryColor="#ff5252"
 							secondaryColor="#fff"
 						/>

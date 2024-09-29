@@ -17,11 +17,12 @@ export async function deleteFromSecureStore(key: string) {
 
 export interface RootStoreType {
     user_role?: number
-    setUser_role: (user_role: number | undefined) => void
+    setUser_role: (user_role: number | undefined) => void,
+    userData?: any
+    setUserData: (userData: any) => void
 }
 
 export class RootatoreKeys {
-    static readonly THEME = "theme"
     static readonly SESION_TOKEN = "sesion_token"
     static readonly USER_ROLE = "user_role"
 }
@@ -29,5 +30,7 @@ export class RootatoreKeys {
 export const useRootStore = create<RootStoreType>((set) => ({
     user_role: undefined,
     setUser_role: (user_role: number | undefined) => set((state: RootStoreType) => ({ ...state, user_role })),
+    userData: undefined,
+    setUserData: (userData: any) => set((state: RootStoreType) => ({ ...state, userData })),
 }))
 

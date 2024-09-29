@@ -16,11 +16,13 @@ import {
 type AuthContextType = {
 	token: string | null;
 	logOut: () => void;
+	setToken: (token: string | null) => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
 	token: null,
 	logOut: () => {},
+	setToken: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -29,15 +31,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [token, setToken] = useState<string | null>(null);
 	const router = useRouter();
 
-	useEffect(() => {
-		setInterval(() => {
-			readFromSecureStore(RootatoreKeys.SESION_TOKEN).then((token) => {
-				setToken(token);
-			});
-		}, 1000);
-	}, []);
+	// useEffect(() => {
+	// 	setInterval(() => {
+	// 		readFromSecureStore(RootatoreKeys.SESION_TOKEN).then((token) => {
+	// 			setToken(token);
+	// 		}).catch((error) => {
+	// 			console.log(error);
+	// 		})
+	// 	}, 1000);
+	// }, []);
 
 	const logOut = () => {
+		setToken(null);
 		deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
 			deleteFromSecureStore(RootatoreKeys.USER_ROLE).then(() => {
 				router.replace("/auth/login");
@@ -46,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	return (
-		<AuthContext.Provider value={{ token, logOut }}>
+		<AuthContext.Provider value={{ token, logOut, setToken }}>
 			{children}
 		</AuthContext.Provider>
 	);

@@ -20,6 +20,7 @@ import {
 } from "@/store/RootStore";
 import type { RootStoreType } from "@/store/RootStore";
 import { AxiosError } from "axios";
+import { useAuth } from "@/components/hooks/useAuth";
 
 type FormDataType = {
 	email?: string;
@@ -34,12 +35,13 @@ export default function Login() {
 	const [verifying, setVerifying] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const hideModal = () => setVisible(false);
-	
+
 	const setUser_role = useRootStore(
 		(state: RootStoreType) => state.setUser_role
 	);
 
-	const [sesion_token, setSesion_token] = useState<string | undefined>(); 
+	// const [sesion_token, setSesion_token] = useState<string | undefined>();
+	const { token, setToken } = useAuth();
 
 	const user_role = useRootStore((state: RootStoreType) => state.user_role);
 
@@ -50,11 +52,13 @@ export default function Login() {
 				readFromSecureStore(RootatoreKeys.USER_ROLE).then((role) => {
 					if (role) {
 						setUser_role(parseInt(role));
-						setSesion_token(token);
+						setToken(token);
 					} else {
-						deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {
-							setVerifying(false);
-						})
+						deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(
+							() => {
+								setVerifying(false);
+							}
+						);
 					}
 				});
 			} else {
@@ -65,10 +69,10 @@ export default function Login() {
 
 	// redirect to home if user is already logged in
 	useEffect(() => {
-		if (sesion_token && user_role) {
+		if (token && user_role) {
 			router.getParent()?.navigate("home" as never);
 		}
-	}, [sesion_token, user_role]);
+	}, [token, user_role]);
 
 	const handleLogin = () => {
 		if (loading) return;
@@ -88,20 +92,25 @@ export default function Login() {
 		} else {
 			LoginUser(data.email, data.password)
 				.then((res) => {
-					saveToSecureStore(
-						RootatoreKeys.SESION_TOKEN,
-						res["token"]
-					).then(() => {
-						setSesion_token(res["token"]);
-						saveToSecureStore(
-							RootatoreKeys.USER_ROLE,
-							res["role"].toString()
-						).then(() => {
-							setData({});
-							setUser_role(res["role"]);
-							setLoading(false);
+					saveToSecureStore(RootatoreKeys.SESION_TOKEN, res["token"])
+						.then(() => {
+							setToken(res["token"]);
+							saveToSecureStore(
+								RootatoreKeys.USER_ROLE,
+								res["role"].toString()
+							)
+								.then(() => {
+									setData({});
+									setUser_role(res["role"]);
+									setLoading(false);
+								})
+								.catch((err) => {
+									console.log(err);
+								});
+						})
+						.catch((err) => {
+							console.log(err);
 						});
-					});
 				})
 				.catch((err: AxiosError) => {
 					error = "Something went wrong: " + err.response?.data;

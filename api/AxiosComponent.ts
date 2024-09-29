@@ -1,7 +1,6 @@
 // define a default config
 import axios from "axios";
 import { Enviroment } from "../store/enviroment";
-import { useAuth } from "@/components/hooks/useAuth";
 
 const axiosInstance = axios.create({
 	baseURL: Enviroment.BACKEND_API,

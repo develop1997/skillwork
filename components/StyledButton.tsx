@@ -21,6 +21,7 @@ const AuthButton: FunctionComponent<AuthButtonProps> = ({
 }) => {
 	return (
 		<Button
+			disabled={loading}
 			mode="contained"
 			style={{
 				display: "flex",
