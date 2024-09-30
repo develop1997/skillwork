@@ -23,6 +23,7 @@ const BackHeaderButton: FunctionComponent<BackHeaderButtonProps> = ({
 				display: "flex",
 				flexDirection: "row",
 				width: windowWidth,
+				backgroundColor: backgroundColor,
 			}}
 		>
 			<Appbar.Header

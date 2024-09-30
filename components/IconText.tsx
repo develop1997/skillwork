@@ -9,19 +9,21 @@ interface IconTextProps {
 	icon: string;
 	text: string;
 	fontSize?: number;
+	margin?: number;
 }
 
 export const IconText: FunctionComponent<IconTextProps> = ({
 	icon,
 	text = "",
 	fontSize = sizeNormalizer * 24,
+	margin = sizeNormalizer * 10,
 }) => {
 	return (
 		<View
 			style={[
 				GeneralStyles.horizontal,
 				{
-					margin: sizeNormalizer * 10,
+					margin: margin,
 					alignItems: "center",
 				},
 			]}

@@ -31,16 +31,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [token, setToken] = useState<string | null>(null);
 	const router = useRouter();
 
-	// useEffect(() => {
-	// 	setInterval(() => {
-	// 		readFromSecureStore(RootatoreKeys.SESION_TOKEN).then((token) => {
-	// 			setToken(token);
-	// 		}).catch((error) => {
-	// 			console.log(error);
-	// 		})
-	// 	}, 1000);
-	// }, []);
-
 	const logOut = () => {
 		setToken(null);
 		deleteFromSecureStore(RootatoreKeys.SESION_TOKEN).then(() => {

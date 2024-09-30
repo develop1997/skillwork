@@ -1,5 +1,5 @@
 import { GeneralStyles } from "@/assets/styles/GeneralStyles";
-import { LoginStyles } from "@/assets/styles/auth/login/LoginStyles";
+import { LoginStyles } from "@/assets/styles/auth/LoginStyles";
 import { Image, StatusBar, View } from "react-native";
 import AdaptativeLogo from "@/assets/images/adaptive-icon.png";
 import { ThemedText } from "@/components/ThemedText";
@@ -21,6 +21,8 @@ import {
 import type { RootStoreType } from "@/store/RootStore";
 import { AxiosError } from "axios";
 import { useAuth } from "@/components/hooks/useAuth";
+import { ScrollView } from "react-native-gesture-handler";
+import { HomeGenerals } from "@/assets/styles/home/HomeGenerals";
 
 type FormDataType = {
 	email?: string;
@@ -145,11 +147,10 @@ export default function Login() {
 					</Dialog.Actions>
 				</Dialog>
 			</Portal>
-			<View
-				style={{
-					...GeneralStyles.centeredView,
-					...LoginStyles.background,
-				}}
+			<ScrollView
+				style={HomeGenerals.background}
+				centerContent
+				contentContainerStyle={HomeGenerals.contentScroll}
 			>
 				<View style={LoginStyles.loginContent}>
 					<Image
@@ -218,7 +219,7 @@ export default function Login() {
 						</View>
 					</View>
 				</View>
-			</View>
+			</ScrollView>
 		</>
 	);
 }

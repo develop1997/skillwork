@@ -10,3 +10,8 @@ export const isPasswordValid = (password: string) => {
     // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character (@$!%*?&)
     return re.test(password);
 };
+
+export const isNumercic = (value: string) => {
+    const re = /^[0-9]+$/;
+    return re.test(value);
+}

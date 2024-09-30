@@ -27,6 +27,7 @@ const AuthInput: FunctionComponent<AuthInputProps> = ({
 			multiline={numberOfLines > 1}
 			label={placeholder}
 			style={{
+				width: "100%",
 				marginVertical: sizeNormalizer * 15,
 				borderRadius: sizeNormalizer * 25,
 				backgroundColor: APP_VALUES.colors.tertiary,

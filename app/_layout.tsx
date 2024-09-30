@@ -37,6 +37,10 @@ export default function RootLayout() {
 						options={{ headerShown: false, animation: "fade" }}
 					/>
 					<Stack.Screen
+						name="forms"
+						options={{ headerShown: false, animation: "fade" }}
+					/>
+					<Stack.Screen
 						name="index"
 						options={{ headerShown: false, animation: "none" }}
 					/>

@@ -1,5 +1,5 @@
 import { GeneralStyles } from "@/assets/styles/GeneralStyles";
-import { LoginStyles } from "@/assets/styles/auth/login/LoginStyles";
+import { LoginStyles } from "@/assets/styles/auth/LoginStyles";
 import { Image, StatusBar, View } from "react-native";
 import AdaptativeLogo from "@/assets/images/adaptive-icon.png";
 import { ThemedText } from "@/components/ThemedText";

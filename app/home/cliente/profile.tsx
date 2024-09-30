@@ -1,13 +1,8 @@
 import { HomeGenerals } from "@/assets/styles/home/HomeGenerals";
-import {
-	RootStoreType,
-	RootatoreKeys,
-	deleteFromSecureStore,
-	useRootStore,
-} from "@/store/RootStore";
+import { useRootStore } from "@/store/RootStore";
 import { Entypo, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { FunctionComponent, useEffect, useState } from "react";
-import { Alert, Image, StatusBar, TouchableOpacity, View } from "react-native";
+import { Image, StatusBar, TouchableOpacity, View } from "react-native";
 import {
 	GestureHandlerRootView,
 	ScrollView,
@@ -22,21 +17,31 @@ import {
 	getCategories,
 	getServices,
 } from "@/api/Profile/CategoriesAndServices";
-import { Chip } from "react-native-paper";
+import { Button, Chip, Dialog, Portal } from "react-native-paper";
 import { IconText } from "@/components/IconText";
 import { useAuth } from "@/components/hooks/useAuth";
-import { GetUserData, UpdateUserData } from "@/api/Profile/userData";
+import { UpdateUserData } from "@/api/Profile/userData";
 import {
 	MediaTypeOptions,
 	launchImageLibraryAsync,
 	requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
 import { uriToBuffer } from "@/utils/files/Image";
+import { ThemedText } from "@/components/ThemedText";
 
 interface ProfileProps {}
 
 const Profile: FunctionComponent<ProfileProps> = () => {
 	const { logOut } = useAuth();
+	const [message, setMessage] = useState<{ title: string; message: string }>({
+		title: "",
+		message: "",
+	});
+
+	const [messageVisible, setMessageVisible] = useState(false);
+	const hideModalMessage = () => {
+		setMessageVisible(false);
+	};
 
 	const [services, setServices] = useState<string[]>([]);
 	const [servicesSelected, setServicesSelected] = useState<string[]>([]);
@@ -99,7 +104,8 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 		setLoading(true);
 		// only email is required (login)
 		if (!formData.email) {
-			Alert.alert("Error", "Email Cannot be empty");
+			setMessage({ title: "Error", message: "Email Cannot be empty" });
+			setMessageVisible(true);
 		}
 
 		data["name"] = formData.name;
@@ -121,11 +127,14 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 
 		UpdateUserData(data)
 			.then((res) => {
-				Alert.alert("Success", "Profile updated successfully");
+				setMessage({ title: "Success", message: "Profile updated successfully" });
+				setMessageVisible(true);
 				setLoading(false);
 			})
 			.catch((err) => {
-				Alert.alert("Error", err.message);
+				setMessage({ title: "Error", message: "Something went wrong, please try again later" });
+				setMessageVisible(true);
+				console.log(err);
 				setFormData({
 					name: userData.name || "",
 					description: userData.description || "",
@@ -159,6 +168,18 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	return (
 		<>
 			<StatusBar barStyle="dark-content" />
+			
+			<Portal>
+				<Dialog visible={messageVisible} onDismiss={hideModalMessage}>
+					<Dialog.Title>{message.title}</Dialog.Title>
+					<Dialog.Content>
+						<ThemedText>{message.message}</ThemedText>
+					</Dialog.Content>
+					<Dialog.Actions>
+						<Button onPress={hideModalMessage}>OK</Button>
+					</Dialog.Actions>
+				</Dialog>
+			</Portal>
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<ScrollView
 					style={HomeGenerals.background}

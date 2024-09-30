@@ -1,7 +1,7 @@
 import { Fonts } from "@/assets/fonts/fonts";
 import { StyleSheet } from "react-native";
-import { sizeNormalizer, windowHeight, windowWidth } from "../../normalizator";
-import { APP_VALUES } from "../../GeneralStyles";
+import { sizeNormalizer, windowHeight, windowWidth } from "../normalizator";
+import { APP_VALUES } from "../GeneralStyles";
 
 export const LoginStyles = StyleSheet.create({
 	background: {
@@ -14,7 +14,7 @@ export const LoginStyles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		width: windowWidth * 0.8,
-		height: windowHeight * 0.85,
+		height: windowHeight * 0.80,
 	},
 	logo: {
 		width: windowHeight * 0.3,

@@ -1,15 +1,32 @@
+import { APP_VALUES } from "@/assets/styles/GeneralStyles";
 import { HomeGenerals } from "@/assets/styles/home/HomeGenerals";
 import WorkCard from "@/components/workCards/WorkCard";
-import { FunctionComponent, useEffect } from "react";
-import { StatusBar } from "react-native";
+import { useRouter } from "expo-router";
+import { FunctionComponent, useEffect, useState } from "react";
+import { SafeAreaView, StatusBar } from "react-native";
 import {
 	GestureHandlerRootView,
 	ScrollView,
 } from "react-native-gesture-handler";
+import { AnimatedFAB } from "react-native-paper";
 
 interface HomeProps {}
 
 const Home: FunctionComponent<HomeProps> = () => {
+	const [isExtended, setIsExtended] = useState(true);
+	const router = useRouter();
+
+	const onScroll = ({ nativeEvent }: { nativeEvent: any }) => {
+		const currentScrollPosition =
+			Math.floor(nativeEvent?.contentOffset?.y) ?? 0;
+
+		setIsExtended(currentScrollPosition <= 0);
+	};
+
+	const onAdd = () => {
+		router.push("/forms/cliente/jobForm");
+	};
+
 	return (
 		<>
 			<StatusBar barStyle="dark-content" />
@@ -18,6 +35,7 @@ const Home: FunctionComponent<HomeProps> = () => {
 					style={HomeGenerals.background}
 					centerContent
 					contentContainerStyle={HomeGenerals.contentScroll}
+					onScroll={onScroll}
 				>
 					{Array.from({ length: 20 }).map((_, index) => (
 						<WorkCard
@@ -27,6 +45,18 @@ const Home: FunctionComponent<HomeProps> = () => {
 						/>
 					))}
 				</ScrollView>
+
+				<AnimatedFAB
+					icon={"plus"}
+					label={"Add"}
+					extended={isExtended}
+					onPress={onAdd}
+					visible={true}
+					animateFrom={"right"}
+					iconMode={"dynamic"}
+					style={HomeGenerals.fab}
+					color={APP_VALUES.colors.text}
+				/>
 			</GestureHandlerRootView>
 		</>
 	);
