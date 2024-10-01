@@ -20,6 +20,7 @@ import {
 	launchImageLibraryAsync,
 	requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
+import Layout from "@/components/Layout";
 
 interface ProfileProps {}
 
@@ -114,189 +115,187 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	};
 
 	return (
-		<>
-			<StatusBar barStyle="dark-content" />
-			<GestureHandlerRootView style={{ flex: 1 }}>
-				<ScrollView
-					style={HomeGenerals.background}
-					centerContent
-					contentContainerStyle={HomeGenerals.contentScroll}
+		<Layout
+			haveTabs={true}
+			haveTitle={true}
+			TabsHeight={sizeNormalizer * 70}
+			TitleHeight={sizeNormalizer * 80}
+		>
+			<>
+				<View
+					style={[
+						ProfileStyles.Horizontal,
+						{
+							marginTop: sizeNormalizer * 30,
+						},
+					]}
 				>
-					<View
-						style={[
-							ProfileStyles.Horizontal,
-							{
-								marginTop: sizeNormalizer * 30,
-							},
-						]}
+					<TouchableOpacity
+						style={ProfileStyles.profileItem}
+						onPress={onSelectImage}
 					>
-						<TouchableOpacity
-							style={ProfileStyles.profileItem}
-							onPress={onSelectImage}
-						>
-							{formData.image && formData.image != "" ? (
-								<Image
-									style={ProfileStyles.profileImage}
-									source={{
-										uri: formData.image,
-									}}
+						{formData.image && formData.image != "" ? (
+							<Image
+								style={ProfileStyles.profileImage}
+								source={{
+									uri: formData.image,
+								}}
+							/>
+						) : (
+							<View
+								style={{
+									padding: sizeNormalizer * 20,
+									width: sizeNormalizer * 100,
+									height: sizeNormalizer * 100,
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+								<FontAwesome5
+									name="user-alt"
+									size={sizeNormalizer * 48}
+									color={APP_VALUES.colors.text}
 								/>
-							) : (
-								<View
-									style={{
-										padding: sizeNormalizer * 20,
-										width: sizeNormalizer * 100,
-										height: sizeNormalizer * 100,
-										display: "flex",
-										justifyContent: "center",
-										alignItems: "center",
-									}}
-								>
-									<FontAwesome5
-										name="user-alt"
-										size={sizeNormalizer * 48}
-										color={APP_VALUES.colors.text}
-									/>
-								</View>
-							)}
-						</TouchableOpacity>
-						<View
-							style={{
-								flex: 1,
-								marginLeft: sizeNormalizer * 15,
-							}}
-						>
-							<AuthInput
-								placeholder="Descripción"
-								numberOfLines={2}
-								value={formData.description}
-								onChangeText={(value: string) => {
-									setFormData({
-										...formData,
-										description: value,
-									});
-								}}
-							/>
-						</View>
-					</View>
-					<View style={ProfileStyles.Horizontal}>
-						<View
-							style={{
-								flex: 1,
-							}}
-						>
-							<AuthInput
-								placeholder="Tipo de identificación"
-								icon="id-card"
-								value={formData.document_type}
-								onChangeText={(value: string) => {
-									setFormData({
-										...formData,
-										document_type: value,
-									});
-								}}
-							/>
-						</View>
-					</View>
-					<View style={ProfileStyles.Horizontal}>
-						<View
-							style={{
-								flex: 1,
-							}}
-						>
-							<AuthInput
-								placeholder="Numero de identificación"
-								icon="id-card"
-								value={formData.document}
-								onChangeText={(value: string) => {
-									setFormData({
-										...formData,
-										document: value,
-									});
-								}}
-							/>
-						</View>
-					</View>
-					<View style={ProfileStyles.Horizontal}>
-						<View
-							style={{
-								flex: 1,
-							}}
-						>
-							<AuthInput
-								placeholder="Nombre o razón social"
-								icon={(props: any) => (
-									<FontAwesome
-										name="user"
-										size={sizeNormalizer * 34}
-										color={APP_VALUES.colors.text}
-									/>
-								)}
-								value={formData.name}
-								onChangeText={(value: string) => {
-									setFormData({ ...formData, name: value });
-								}}
-							/>
-						</View>
-					</View>
-					<View style={ProfileStyles.Horizontal}>
-						<View
-							style={{
-								flex: 1,
-							}}
-						>
-							<AuthInput
-								placeholder="Telefono"
-								icon="phone"
-								value={formData.phone}
-								onChangeText={(value: string) => {
-									setFormData({ ...formData, phone: value });
-								}}
-							/>
-						</View>
-					</View>
-					<View style={ProfileStyles.Horizontal}>
-						<View
-							style={{
-								flex: 1,
-							}}
-						>
-							<AuthInput
-								placeholder="Correo electronico"
-								icon="email"
-								value={formData.email}
-								onChangeText={(value: string) => {
-									setFormData({
-										...formData,
-										email: value.trim(),
-									});
-								}}
-							/>
-						</View>
-					</View>
+							</View>
+						)}
+					</TouchableOpacity>
 					<View
-						style={[
-							ProfileStyles.Horizontal,
-							{
-								marginVertical: sizeNormalizer * 30,
-							},
-						]}
+						style={{
+							flex: 1,
+							marginLeft: sizeNormalizer * 15,
+						}}
 					>
-						<AuthButton
-							text="Editar"
-							loading={loading}
-							onPress={onEditProfile}
-						/>
-						<AuthButton
-							text="Cerrar sesion"
-							onPress={logOut}
-							primaryColor="#ff5252"
-							secondaryColor="#fff"
+						<AuthInput
+							placeholder="Descripción"
+							numberOfLines={2}
+							value={formData.description}
+							onChangeText={(value: string) => {
+								setFormData({
+									...formData,
+									description: value,
+								});
+							}}
 						/>
 					</View>
-				</ScrollView>
-			</GestureHandlerRootView>
-		</>
+				</View>
+				<View style={ProfileStyles.Horizontal}>
+					<View
+						style={{
+							flex: 1,
+						}}
+					>
+						<AuthInput
+							placeholder="Tipo de identificación"
+							icon="id-card"
+							value={formData.document_type}
+							onChangeText={(value: string) => {
+								setFormData({
+									...formData,
+									document_type: value,
+								});
+							}}
+						/>
+					</View>
+				</View>
+				<View style={ProfileStyles.Horizontal}>
+					<View
+						style={{
+							flex: 1,
+						}}
+					>
+						<AuthInput
+							placeholder="Numero de identificación"
+							icon="id-card"
+							value={formData.document}
+							onChangeText={(value: string) => {
+								setFormData({
+									...formData,
+									document: value,
+								});
+							}}
+						/>
+					</View>
+				</View>
+				<View style={ProfileStyles.Horizontal}>
+					<View
+						style={{
+							flex: 1,
+						}}
+					>
+						<AuthInput
+							placeholder="Nombre o razón social"
+							icon={(props: any) => (
+								<FontAwesome
+									name="user"
+									size={sizeNormalizer * 34}
+									color={APP_VALUES.colors.text}
+								/>
+							)}
+							value={formData.name}
+							onChangeText={(value: string) => {
+								setFormData({ ...formData, name: value });
+							}}
+						/>
+					</View>
+				</View>
+				<View style={ProfileStyles.Horizontal}>
+					<View
+						style={{
+							flex: 1,
+						}}
+					>
+						<AuthInput
+							placeholder="Telefono"
+							icon="phone"
+							value={formData.phone}
+							onChangeText={(value: string) => {
+								setFormData({ ...formData, phone: value });
+							}}
+						/>
+					</View>
+				</View>
+				<View style={ProfileStyles.Horizontal}>
+					<View
+						style={{
+							flex: 1,
+						}}
+					>
+						<AuthInput
+							placeholder="Correo electronico"
+							icon="email"
+							value={formData.email}
+							onChangeText={(value: string) => {
+								setFormData({
+									...formData,
+									email: value.trim(),
+								});
+							}}
+						/>
+					</View>
+				</View>
+				<View
+					style={[
+						ProfileStyles.Horizontal,
+						{
+							marginVertical: sizeNormalizer * 30,
+						},
+					]}
+				>
+					<AuthButton
+						text="Editar"
+						loading={loading}
+						onPress={onEditProfile}
+					/>
+					<AuthButton
+						text="Cerrar sesion"
+						onPress={logOut}
+						primaryColor="#ff5252"
+						secondaryColor="#fff"
+					/>
+				</View>
+			</>
+		</Layout>
 	);
 };
 
