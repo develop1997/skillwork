@@ -29,10 +29,10 @@ const AuthButton: FunctionComponent<AuthButtonProps> = ({
 				borderRadius: sizeNormalizer * 30,
 			}}
 			contentStyle={{
-				height: sizeNormalizer * 60,
+				height: sizeNormalizer * 65,
 			}}
 			labelStyle={{
-				fontSize: sizeNormalizer * 20,
+				fontSize: sizeNormalizer * 18,
 				fontFamily: Fonts.RobotoBold,
 			}}
 			loading={loading}

@@ -360,7 +360,11 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 										key={c}
 										mode="outlined"
 										textStyle={{
-											fontSize: sizeNormalizer * 20,
+											fontSize: sizeNormalizer * 16,
+											lineHeight: sizeNormalizer * 20,
+										}}
+										style={{
+											height: sizeNormalizer * 30,
 										}}
 										onClose={() => {
 											setCategoriesSelected(
@@ -429,7 +433,11 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 										key={c}
 										mode="outlined"
 										textStyle={{
-											fontSize: sizeNormalizer * 20,
+											fontSize: sizeNormalizer * 16,
+											lineHeight: sizeNormalizer * 20,
+										}}
+										style={{
+											height: sizeNormalizer * 30,
 										}}
 										onClose={() => {
 											setServicesSelected(

@@ -45,12 +45,14 @@ export const LoginStyles = StyleSheet.create({
 		color: APP_VALUES.colors.text,
 		marginTop: sizeNormalizer * 10,
 		fontFamily: Fonts.RobotoRegular,
+		fontSize: sizeNormalizer * 18,
+		lineHeight: sizeNormalizer * 20,
 	},
 	loginLink: {
 		fontWeight: "bold",
 		color: APP_VALUES.colors.secondary,
 		fontFamily: Fonts.RobotoBold,
-		fontSize: 18,
-		lineHeight: 18,
+		fontSize: sizeNormalizer * 18,
+		lineHeight: sizeNormalizer * 20,
 	},
 });

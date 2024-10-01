@@ -31,9 +31,9 @@ const UserItem: FunctionComponent<UserItemProps> = ({
 				<Image
 					style={{
 						padding: sizeNormalizer * 5,
-						width: sizeNormalizer * 30,
-						height: sizeNormalizer * 30,
-						borderRadius: sizeNormalizer * 15,
+						width: sizeNormalizer * 40,
+						height: sizeNormalizer * 40,
+						borderRadius: sizeNormalizer * 20,
 					}}
 					source={{
 						uri: image,
@@ -43,8 +43,9 @@ const UserItem: FunctionComponent<UserItemProps> = ({
 				<View
 					style={{
 						padding: sizeNormalizer * 5,
-						width: sizeNormalizer * 30,
-						height: sizeNormalizer * 30,
+						width: sizeNormalizer * 40,
+						height: sizeNormalizer * 40,
+						borderRadius: sizeNormalizer * 20,
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
@@ -52,7 +53,7 @@ const UserItem: FunctionComponent<UserItemProps> = ({
 				>
 					<FontAwesome5
 						name="user-alt"
-						size={sizeNormalizer * 20}
+						size={sizeNormalizer * 30}
 						color={APP_VALUES.colors.text}
 					/>
 				</View>
