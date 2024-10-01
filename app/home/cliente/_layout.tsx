@@ -11,7 +11,7 @@ export default function HomeLayout() {
 				tabBarInactiveTintColor: APP_VALUES.colors.disabledTextDark,
 				tabBarStyle: {
 					backgroundColor: APP_VALUES.colors.secondary,
-					height: 60,
+					height: sizeNormalizer * 70,
 				},
 				headerStyle: {
 					backgroundColor: APP_VALUES.colors.primary,

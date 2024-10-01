@@ -1,5 +1,5 @@
 import { APP_VALUES } from "@/assets/styles/GeneralStyles";
-import { sizeNormalizer } from "@/assets/styles/normalizator";
+import { sizeNormalizer, windowHeight } from "@/assets/styles/normalizator";
 import { useNavigation } from "expo-router";
 import { FunctionComponent } from "react";
 import { Dimensions, View } from "react-native";
@@ -29,6 +29,7 @@ const BackHeaderButton: FunctionComponent<BackHeaderButtonProps> = ({
 			<Appbar.Header
 				style={{
 					backgroundColor: backgroundColor,
+					height: sizeNormalizer * 70,
 				}}
 				theme={{
 					colors: {

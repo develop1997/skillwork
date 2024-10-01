@@ -1,11 +1,18 @@
 import { StyleSheet } from "react-native";
-import { sizeNormalizer } from "./normalizator";
+import { sizeNormalizer, windowHeight, windowWidth } from "./normalizator";
 
 export const GeneralStyles = StyleSheet.create({
 	centeredView: {
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	centeredFullScreen: {
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+		width: windowWidth,
+		height: windowHeight,
 	},
 	horizontal: {
 		display: "flex",
@@ -56,5 +63,6 @@ export const APP_VALUES = {
 		text: "#000",
 		disabledTextDark: "#2c2a2a",
 		disabledTextLight: "#7b7b7b",
+		error: "#f94e4e",
 	},
 };

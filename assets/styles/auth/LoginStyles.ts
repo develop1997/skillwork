@@ -6,7 +6,6 @@ import { APP_VALUES } from "../GeneralStyles";
 export const LoginStyles = StyleSheet.create({
 	background: {
 		backgroundColor: APP_VALUES.colors.primary,
-		flex: 1,
 	},
 	loginContent: {
 		display: "flex",

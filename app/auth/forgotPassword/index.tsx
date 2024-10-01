@@ -1,13 +1,11 @@
 import { GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { LoginStyles } from "@/assets/styles/auth/LoginStyles";
-import { Image, StatusBar, View } from "react-native";
+import { Image, View } from "react-native";
 import AdaptativeLogo from "@/assets/images/adaptive-icon.png";
 import { ThemedText } from "@/components/ThemedText";
 import AuthInput from "@/components/StyledInput";
 import { useState } from "react";
 import AuthButton from "@/components/StyledButton";
-import BackHeaderButton from "@/components/BackAction";
-import { Button, Dialog, Portal } from "react-native-paper";
 import { useNavigation } from "expo-router";
 import { isEmailValid, isPasswordValid } from "@/utils/forms/validate";
 import {
@@ -15,17 +13,17 @@ import {
 	ForgotPasswordEmail,
 	ForgotPasswordReset,
 } from "@/api/Auth/ForgotPassword";
+import Layout from "@/components/Layout";
+import { useRootStore } from "@/store/RootStore";
 
 export default function ForgotPassword() {
+	const { setMessage, setMessageVisible } = useRootStore();
 	const [email, setEmail] = useState("");
 	const [code, setCode] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 	const router = useNavigation();
-	const [stage, setStage] = useState(0); // 0 for email, 1 for code, 2 for password
-	const [error, setError] = useState<string>();
-	const [visible, setVisible] = useState(false);
-	const hideModal = () => setVisible(false);
+	const [stage, setStage] = useState(0);
 
 	const onSendcode = () => {
 		let error = undefined;
@@ -39,15 +37,15 @@ export default function ForgotPassword() {
 				})
 				.catch((err) => {
 					error = "Something went wrong: " + err;
-					setError(error);
-					setVisible(true);
+					setMessage({ title: "Error", message: error });
+					setMessageVisible(true);
 					setLoading(false);
 				});
 		}
 
 		if (error) {
-			setError(error);
-			setVisible(true);
+			setMessage({ title: "Error", message: error });
+			setMessageVisible(true);
 			setLoading(false);
 		}
 	};
@@ -64,15 +62,15 @@ export default function ForgotPassword() {
 				})
 				.catch((err) => {
 					error = "Something went wrong: " + err;
-					setError(error);
-					setVisible(true);
+					setMessage({ title: "Error", message: error });
+					setMessageVisible(true);
 					setLoading(false);
 				});
 		}
 
 		if (error) {
-			setError(error);
-			setVisible(true);
+			setMessage({ title: "Error", message: error });
+			setMessageVisible(true);
 			setLoading(false);
 		}
 	};
@@ -90,117 +88,92 @@ export default function ForgotPassword() {
 				})
 				.catch((err) => {
 					error = "Something went wrong: " + err;
-					setError(error);
-					setVisible(true);
+					setMessage({ title: "Error", message: error });
+					setMessageVisible(true);
 					setLoading(false);
 				});
 		}
 
 		if (error) {
-			setError(error);
-			setVisible(true);
+			setMessage({ title: "Error", message: error });
+			setMessageVisible(true);
 			setLoading(false);
 		}
 	};
 
 	return (
-		<>
-			<StatusBar barStyle="dark-content" />
-			<Portal>
-				<BackHeaderButton />
-				<Dialog visible={visible} onDismiss={hideModal}>
-					<Dialog.Title>Error</Dialog.Title>
-					<Dialog.Content>
-						<ThemedText>{error}</ThemedText>
-					</Dialog.Content>
-					<Dialog.Actions>
-						<Button onPress={hideModal}>OK</Button>
-					</Dialog.Actions>
-				</Dialog>
-			</Portal>
-
-			<View
-				style={{
-					...GeneralStyles.centeredView,
-					...LoginStyles.background,
-				}}
-			>
-				<View style={LoginStyles.loginContent}>
-					<Image
-						source={AdaptativeLogo as any}
-						style={LoginStyles.logo}
-					/>
-					<View style={LoginStyles.formCard}>
-						<View>
-							<ThemedText
-								type="title"
-								style={LoginStyles.loginTittle}
-							>
-								Recuperar Contraseña
-							</ThemedText>
-							<ThemedText
-								type="default"
-								style={LoginStyles.loginText}
-							>
-								{stage === 0
-									? "Ingresa tu correo electronico"
-									: stage === 1
-									? "Ingresa el codigo enviado a tu correo"
-									: "Ingresa tu nueva contraseña"}
-							</ThemedText>
-						</View>
-						<View>
-							{stage === 0 ? (
-								<AuthInput
-									icon="email"
-									placeholder="Email"
-									value={email}
-									onChangeText={(value) =>
-										setEmail(value.trim())
-									}
-								/>
-							) : stage === 1 ? (
-								<AuthInput
-									icon="lock"
-									placeholder="Codigo"
-									value={code}
-									onChangeText={(value) =>
-										setCode(value.trim())
-									}
-								/>
-							) : (
-								<AuthInput
-									icon="lock"
-									placeholder="Nueva Contraseña"
-									value={newPassword}
-									secureTextEntry
-									onChangeText={(value) =>
-										setNewPassword(value.trim())
-									}
-								/>
-							)}
-						</View>
-
-						<View style={GeneralStyles.centeredView}>
-							<AuthButton
-								loading={loading}
-								text="Enviar"
-								onPress={() => {
-									if (loading) return;
-									setLoading(true);
-									if (stage === 0) {
-										onSendcode();
-									} else if (stage === 1) {
-										onVerifyCode();
-									} else if (stage === 2) {
-										onResetPassword();
-									}
-								}}
+		<Layout back>
+			<View style={LoginStyles.loginContent}>
+				<Image
+					source={AdaptativeLogo as any}
+					style={LoginStyles.logo}
+				/>
+				<View style={LoginStyles.formCard}>
+					<View>
+						<ThemedText
+							type="title"
+							style={LoginStyles.loginTittle}
+						>
+							Recuperar Contraseña
+						</ThemedText>
+						<ThemedText
+							type="default"
+							style={LoginStyles.loginText}
+						>
+							{stage === 0
+								? "Ingresa tu correo electronico"
+								: stage === 1
+								? "Ingresa el codigo enviado a tu correo"
+								: "Ingresa tu nueva contraseña"}
+						</ThemedText>
+					</View>
+					<View>
+						{stage === 0 ? (
+							<AuthInput
+								icon="email"
+								placeholder="Email"
+								value={email}
+								onChangeText={(value) => setEmail(value.trim())}
 							/>
-						</View>
+						) : stage === 1 ? (
+							<AuthInput
+								icon="lock"
+								placeholder="Codigo"
+								value={code}
+								onChangeText={(value) => setCode(value.trim())}
+							/>
+						) : (
+							<AuthInput
+								icon="lock"
+								placeholder="Nueva Contraseña"
+								value={newPassword}
+								secureTextEntry
+								onChangeText={(value) =>
+									setNewPassword(value.trim())
+								}
+							/>
+						)}
+					</View>
+
+					<View style={GeneralStyles.centeredView}>
+						<AuthButton
+							loading={loading}
+							text="Enviar"
+							onPress={() => {
+								if (loading) return;
+								setLoading(true);
+								if (stage === 0) {
+									onSendcode();
+								} else if (stage === 1) {
+									onVerifyCode();
+								} else if (stage === 2) {
+									onResetPassword();
+								}
+							}}
+						/>
 					</View>
 				</View>
 			</View>
-		</>
+		</Layout>
 	);
 }

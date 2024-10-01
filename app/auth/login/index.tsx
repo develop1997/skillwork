@@ -1,6 +1,6 @@
 import { GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { LoginStyles } from "@/assets/styles/auth/LoginStyles";
-import { Image, StatusBar, View } from "react-native";
+import { Image, View } from "react-native";
 import AdaptativeLogo from "@/assets/images/adaptive-icon.png";
 import { ThemedText } from "@/components/ThemedText";
 import AuthInput from "@/components/StyledInput";
@@ -9,7 +9,6 @@ import AuthButton from "@/components/StyledButton";
 import { InternalLink } from "@/components/InternalLink";
 import LoginUser from "@/api/Auth/Login";
 import { useNavigation } from "expo-router";
-import { Button, Dialog, Portal } from "react-native-paper";
 import { isEmailValid, isPasswordValid } from "@/utils/forms/validate";
 import {
 	RootatoreKeys,
@@ -21,8 +20,7 @@ import {
 import type { RootStoreType } from "@/store/RootStore";
 import { AxiosError } from "axios";
 import { useAuth } from "@/components/hooks/useAuth";
-import { ScrollView } from "react-native-gesture-handler";
-import { HomeGenerals } from "@/assets/styles/home/HomeGenerals";
+import Layout from "@/components/Layout";
 
 type FormDataType = {
 	email?: string;
@@ -30,17 +28,11 @@ type FormDataType = {
 };
 
 export default function Login() {
+	const { setMessage, setMessageVisible, setUser_role } = useRootStore();
 	const [data, setData] = useState<FormDataType>();
 	const router = useNavigation();
-	const [error, setError] = useState<string>();
-	const [visible, setVisible] = useState(false);
 	const [verifying, setVerifying] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const hideModal = () => setVisible(false);
-
-	const setUser_role = useRootStore(
-		(state: RootStoreType) => state.setUser_role
-	);
 
 	// const [sesion_token, setSesion_token] = useState<string | undefined>();
 	const { token, setToken } = useAuth();
@@ -116,15 +108,15 @@ export default function Login() {
 				})
 				.catch((err: AxiosError) => {
 					error = "Something went wrong: " + err.response?.data;
-					setError(error);
-					setVisible(true);
+					setMessage({ title: "Error", message: error });
+					setMessageVisible(true);
 					setLoading(false);
 				});
 		}
 
 		if (error) {
-			setError(error);
-			setVisible(true);
+			setMessage({ title: "Error", message: error });
+			setMessageVisible(true);
 			setLoading(false);
 		}
 	};
@@ -134,24 +126,8 @@ export default function Login() {
 	}
 
 	return (
-		<>
-			<StatusBar barStyle="dark-content" />
-			<Portal>
-				<Dialog visible={visible} onDismiss={hideModal}>
-					<Dialog.Title>Error</Dialog.Title>
-					<Dialog.Content>
-						<ThemedText>{error}</ThemedText>
-					</Dialog.Content>
-					<Dialog.Actions>
-						<Button onPress={hideModal}>OK</Button>
-					</Dialog.Actions>
-				</Dialog>
-			</Portal>
-			<ScrollView
-				style={HomeGenerals.background}
-				centerContent
-				contentContainerStyle={HomeGenerals.contentScroll}
-			>
+		<Layout>
+			<View style={GeneralStyles.centeredFullScreen}>
 				<View style={LoginStyles.loginContent}>
 					<Image
 						source={AdaptativeLogo as any}
@@ -178,7 +154,10 @@ export default function Login() {
 								placeholder="Email"
 								value={data?.email ? data?.email : ""}
 								onChangeText={(value) =>
-									setData({ ...data, email: value.trim() })
+									setData({
+										...data,
+										email: value.trim(),
+									})
 								}
 							/>
 							<AuthInput
@@ -187,7 +166,10 @@ export default function Login() {
 								secureTextEntry
 								value={data?.password ? data?.password : ""}
 								onChangeText={(value) =>
-									setData({ ...data, password: value.trim() })
+									setData({
+										...data,
+										password: value.trim(),
+									})
 								}
 							/>
 						</View>
@@ -219,7 +201,7 @@ export default function Login() {
 						</View>
 					</View>
 				</View>
-			</ScrollView>
-		</>
+			</View>
+		</Layout>
 	);
 }

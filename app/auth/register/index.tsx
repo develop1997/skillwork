@@ -14,6 +14,8 @@ import { useNavigation } from "expo-router";
 import BackHeaderButton from "@/components/BackAction";
 import { isEmailValid, isPasswordValid } from "@/utils/forms/validate";
 import { sizeNormalizer } from "@/assets/styles/normalizator";
+import Layout from "@/components/Layout";
+import { useRootStore } from "@/store/RootStore";
 
 type FormDataType = {
 	email?: string;
@@ -24,12 +26,9 @@ type FormDataType = {
 
 export default function Register() {
 	const [data, setData] = useState<FormDataType>();
-	const [error, setError] = useState<string>();
-	const [visible, setVisible] = useState(false);
+	const { setMessage, setMessageVisible } = useRootStore();
 	const [loading, setLoading] = useState(false);
 	const router = useNavigation();
-
-	const hideModal = () => setVisible(false);
 
 	const onSubmit = () => {
 		if (loading) return;
@@ -59,45 +58,28 @@ export default function Register() {
 					setLoading(false);
 				})
 				.catch((err) => {
-					if(err.status==400){//email already exist in db
-						error=err.response.data
-					}else{
-						error=err
+					if (err.status == 400) {
+						//email already exist in db
+						error = err.response.data;
+					} else {
+						error = err;
 					}
 					error = "Something went wrong: " + error;
-					setError(error);
-					setVisible(true);
+					setMessage({ title: "Error", message: error });
+					setMessageVisible(true);
 					setLoading(false);
 				});
 		}
 		if (error) {
-			setError(error);
-			setVisible(true);
+			setMessage({ title: "Error", message: error });
+			setMessageVisible(true);
 			setLoading(false);
 		}
 	};
 
 	return (
 		<>
-			<StatusBar barStyle="dark-content" />
-			<Portal>
-				<BackHeaderButton />
-				<Dialog visible={visible} onDismiss={hideModal}>
-					<Dialog.Title>Error</Dialog.Title>
-					<Dialog.Content>
-						<ThemedText>{error}</ThemedText>
-					</Dialog.Content>
-					<Dialog.Actions>
-						<Button onPress={hideModal}>OK</Button>
-					</Dialog.Actions>
-				</Dialog>
-			</Portal>
-			<View
-				style={{
-					...GeneralStyles.centeredView,
-					...LoginStyles.background,
-				}}
-			>
+			<Layout back>
 				<View style={LoginStyles.loginContent}>
 					<View style={LoginStyles.formCardNoImage}>
 						<View>
@@ -191,7 +173,7 @@ export default function Register() {
 						</View>
 					</View>
 				</View>
-			</View>
+			</Layout>
 		</>
 	);
 }

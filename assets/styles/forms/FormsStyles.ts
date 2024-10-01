@@ -11,7 +11,7 @@ export const FormsStyles = StyleSheet.create({
         ...GeneralStyles.centeredVertical,
 		width: windowWidth * 0.9,
 		padding: sizeNormalizer * 20,
-        marginVertical: sizeNormalizer * 100,
+        marginVertical: sizeNormalizer * 50,
     },
     formInput: {
         display: "flex",
