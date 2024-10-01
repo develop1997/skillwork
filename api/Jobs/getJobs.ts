@@ -34,3 +34,15 @@ export async function getAppliedJobs() {
 
 	return response.data;
 }
+
+export async function getJobApplicans(job_id: string) {
+	const response = await axiosInstance.get(
+		`/api/v1/job/applicants/${job_id}`
+	);
+
+	if (response.status !== 200) {
+		throw new Error(response.data);
+	}
+
+	return response.data;
+}

@@ -3,6 +3,7 @@ import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { FormsStyles } from "@/assets/styles/forms/FormsStyles";
 import { JobsGenerals } from "@/assets/styles/jobs/geerals";
 import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
+import { ProfileStyles } from "@/assets/styles/profile/ProfileStyles";
 import { IconText } from "@/components/IconText";
 import Layout from "@/components/Layout";
 import Loader from "@/components/Loader";
@@ -43,6 +44,10 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 				setMessage({ title: "Error", message: err.message });
 				setMessageVisible(true);
 			});
+	};
+
+	const onViewApplicants = () => {
+		router.push(`/jobs/cliente/applications/${id}` as any);
 	};
 
 	return (
@@ -122,10 +127,18 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 							</View>
 						</View>
 						<View
-							style={{
-								marginTop: sizeNormalizer * 20,
-							}}
+							style={[
+								ProfileStyles.Horizontal,
+								{
+									marginVertical: sizeNormalizer * 30,
+								},
+							]}
 						>
+							<AuthButton
+								text="Ver Postulantes"
+								loading={loading}
+								onPress={onViewApplicants}
+							/>
 							<AuthButton
 								text="Eliminar"
 								loading={loading}
