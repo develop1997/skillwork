@@ -19,8 +19,8 @@ import {
 } from "@/store/RootStore";
 import type { RootStoreType } from "@/store/RootStore";
 import { AxiosError } from "axios";
-import { useAuth } from "@/components/hooks/useAuth";
 import Layout from "@/components/Layout";
+import { useAuth } from "@/components/hooks/useAuth";
 
 type FormDataType = {
 	email?: string;
@@ -34,8 +34,7 @@ export default function Login() {
 	const [verifying, setVerifying] = useState(true);
 	const [loading, setLoading] = useState(false);
 
-	// const [sesion_token, setSesion_token] = useState<string | undefined>();
-	const { token, setToken } = useAuth();
+	const { setToken, token } = useAuth();
 
 	const user_role = useRootStore((state: RootStoreType) => state.user_role);
 

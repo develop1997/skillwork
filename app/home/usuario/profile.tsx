@@ -1,18 +1,13 @@
-import { HomeGenerals } from "@/assets/styles/home/HomeGenerals";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { FunctionComponent, useEffect, useState } from "react";
-import { Alert, Image, StatusBar, TouchableOpacity, View } from "react-native";
-import {
-	GestureHandlerRootView,
-	ScrollView,
-} from "react-native-gesture-handler";
+import { Alert, Image, TouchableOpacity, View } from "react-native";
 import { ProfileStyles } from "@/assets/styles/profile/ProfileStyles";
 import AuthInput from "@/components/StyledInput";
 import AuthButton from "@/components/StyledButton";
 import { sizeNormalizer } from "@/assets/styles/normalizator";
 import { APP_VALUES } from "@/assets/styles/GeneralStyles";
 import { useAuth } from "@/components/hooks/useAuth";
-import { GetUserData, UpdateUserData } from "@/api/Profile/userData";
+import { UpdateUserData } from "@/api/Profile/userData";
 import { useRootStore } from "@/store/RootStore";
 import { uriToBuffer } from "@/utils/files/Image";
 import {
@@ -290,8 +285,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 					<AuthButton
 						text="Cerrar sesion"
 						onPress={logOut}
-						primaryColor="#ff5252"
-						secondaryColor="#fff"
+						primaryColor={APP_VALUES.colors.error}
 					/>
 				</View>
 			</>

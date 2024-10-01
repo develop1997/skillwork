@@ -87,7 +87,7 @@ const WorkCard: FunctionComponent<WorkCardProps> = ({
 				<Button
 					mode="contained"
 					style={styles.button}
-					textColor="#000"
+					textColor={APP_VALUES.colors.text}
 					onPress={onPress}
 				>
 					Ver más

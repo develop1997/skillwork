@@ -14,18 +14,10 @@ import { FunctionComponent, useEffect } from "react";
 interface HomeProps {}
 
 const Home: FunctionComponent<HomeProps> = () => {
-	const user_role = useRootStore((state: RootStoreType) => state.user_role);
 	const router = useNavigation();
 
-	const { token, logOut } = useAuth();
-
-	useEffect(() => {
-		if (token) {
-			configureAxios(token, logOut);
-		}
-	}, [token]);
-
-	const { setUserData } = useRootStore();
+	const { logOut, token } = useAuth();
+	const { setUserData, user_role } = useRootStore();
 
 	const setUser_role = useRootStore(
 		(state: RootStoreType) => state.setUser_role
@@ -41,10 +33,13 @@ const Home: FunctionComponent<HomeProps> = () => {
 	};
 
 	useEffect(() => {
-		GetUserData().then((res) => {
-			setUserData(res);
-		});
-	}, []);
+		if (token) {
+			configureAxios(token, logOut);
+			GetUserData().then((res) => {
+				setUserData(res);
+			});
+		}
+	}, [token]);
 
 	useEffect(() => {
 		if (!user_role) {

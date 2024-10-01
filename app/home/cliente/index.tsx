@@ -1,8 +1,9 @@
 import { getJobsOfUser } from "@/api/Jobs/getJobs";
-import { APP_VALUES } from "@/assets/styles/GeneralStyles";
+import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { HomeGenerals } from "@/assets/styles/home/HomeGenerals";
 import { sizeNormalizer } from "@/assets/styles/normalizator";
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 import { ThemedText } from "@/components/ThemedText";
 import WorkCard from "@/components/workCards/WorkCard";
 import { useRootStore } from "@/store/RootStore";
@@ -16,13 +17,20 @@ interface HomeProps {}
 const Home: FunctionComponent<HomeProps> = () => {
 	const [isExtended, setIsExtended] = useState(true);
 	const router = useRouter();
+	const [fetching, setFetching] = useState(true);
 
 	const { userJobs, setUserJobs } = useRootStore();
 
 	useEffect(() => {
 		getJobsOfUser()
-			.then((data) => setUserJobs(data))
-			.catch((err) => setUserJobs([]));
+			.then((data) => {
+				setUserJobs(data);
+				setFetching(false);
+			})
+			.catch((err) => {
+				setUserJobs([]);
+				setFetching(false);
+			});
 	}, []);
 
 	const onScroll = ({ nativeEvent }: { nativeEvent: any }) => {
@@ -38,33 +46,52 @@ const Home: FunctionComponent<HomeProps> = () => {
 
 	return (
 		<>
-			<Layout onScroll={onScroll}
-			haveTabs={true}
-			haveTitle={true}
-			TabsHeight={sizeNormalizer * 70}
-			TitleHeight={sizeNormalizer * 80}
+			<Layout
+				onScroll={onScroll}
+				haveTabs={true}
+				haveTitle={true}
+				TabsHeight={sizeNormalizer * 70}
+				TitleHeight={sizeNormalizer * 80}
 			>
-				<View>
-					{userJobs.length !== 0 ? (
-						<>
-							{userJobs.map((job: any) => (
-								<WorkCard
-									key={job.id_job}
-									title={job.title}
-									content={job.description}
-								/>
-							))}
-						</>
-					) : (
-						<>
-							<View>
-								<ThemedText>
-									No hay trabajos registrados
-								</ThemedText>
-							</View>
-						</>
-					)}
-				</View>
+				{fetching ? (
+					<View
+						style={[
+							GeneralStyles.centeredView,
+							{
+								paddingVertical: "20%",
+							},
+						]}
+					>
+						<Loader />
+					</View>
+				) : (
+					<View>
+						{userJobs.length !== 0 ? (
+							<>
+								{userJobs.map((job: any) => (
+									<WorkCard
+										key={job.id_job}
+										title={job.title}
+										content={job.description}
+										onPress={() =>
+											router.push(
+												`/jobs/cliente/job/${job.id_job}` as any
+											)
+										}
+									/>
+								))}
+							</>
+						) : (
+							<>
+								<View>
+									<ThemedText>
+										No hay trabajos registrados
+									</ThemedText>
+								</View>
+							</>
+						)}
+					</View>
+				)}
 			</Layout>
 			<AnimatedFAB
 				icon={"plus"}

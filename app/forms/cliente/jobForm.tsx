@@ -124,14 +124,21 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 		};
 
 		CreateJob(job)
-			.then(() => {
+			.then((res) => {
 				setMessage({
 					title: "Exito",
 					message: "Oferta Creada Correctamente",
 				});
 				setMessageVisible(true);
 				setLoading(false);
-				setUserJobs([...userJobs, job]);
+				setUserJobs([
+					...userJobs,
+					{
+						...job,
+						id_job: res,
+						created_at: dayjs().format("YYYY-MM-DD"),
+					},
+				]);
 				setData({
 					title: "",
 					description: "",

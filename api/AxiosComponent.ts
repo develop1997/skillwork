@@ -8,11 +8,19 @@ const axiosInstance = axios.create({
 		"Content-Type": "application/json",
 	},
 });
+let requestInterceptor: number | null = null;
+let responseInterceptor: number | null = null;
 
 export function configureAxios(token: string, logOut: () => void) {
+	if (requestInterceptor !== null) {
+		axiosInstance.interceptors.request.eject(requestInterceptor);
+	}
+	if (responseInterceptor !== null) {
+		axiosInstance.interceptors.response.eject(responseInterceptor);
+	}
+
 	if (token) {
-		// add the token to the header
-		axiosInstance.interceptors.request.use(
+		requestInterceptor = axiosInstance.interceptors.request.use(
 			(config) => {
 				config.headers["Authorization"] = `Bearer ${token}`;
 				return config;
@@ -22,13 +30,12 @@ export function configureAxios(token: string, logOut: () => void) {
 			}
 		);
 
-		// interceptor for 403
-		axiosInstance.interceptors.response.use(
+		responseInterceptor = axiosInstance.interceptors.response.use(
 			(response) => {
 				return response;
 			},
 			(error) => {
-				if (error.response.status === 403) {
+				if (error.response && error.response.status === 403) {
 					logOut();
 				}
 				return Promise.reject(error);

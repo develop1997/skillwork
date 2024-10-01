@@ -432,8 +432,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 					<AuthButton
 						text="Cerrar sesion"
 						onPress={logOut}
-						primaryColor="#ff5252"
-						secondaryColor="#fff"
+						primaryColor={APP_VALUES.colors.error}
 					/>
 				</View>
 			</>

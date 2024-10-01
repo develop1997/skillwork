@@ -59,7 +59,7 @@ export const APP_VALUES = {
 		primary: "#fff",
 		secondary: "#34A3DF",
 		secondaryLight: "#85C8EC",
-		tertiary: "#c7c7c7",
+		tertiary: "#D9D9D9",
 		text: "#000",
 		disabledTextDark: "#2c2a2a",
 		disabledTextLight: "#7b7b7b",

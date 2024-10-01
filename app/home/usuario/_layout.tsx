@@ -1,20 +1,9 @@
-import { configureAxios } from "@/api/AxiosComponent";
 import { APP_VALUES } from "@/assets/styles/GeneralStyles";
 import { sizeNormalizer } from "@/assets/styles/normalizator";
-import { AuthProvider, useAuth } from "@/components/hooks/useAuth";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useEffect } from "react";
 
 export default function HomeLayout() {
-	const { token, logOut} = useAuth();
-
-	useEffect(() => {
-		if (token) {
-			configureAxios(token, logOut);
-		}
-	}, [token]);
-	
 	return (
 		<Tabs
 			screenOptions={{

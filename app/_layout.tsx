@@ -41,6 +41,10 @@ export default function RootLayout() {
 						options={{ headerShown: false, animation: "fade" }}
 					/>
 					<Stack.Screen
+						name="jobs"
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
 						name="index"
 						options={{ headerShown: false, animation: "none" }}
 					/>

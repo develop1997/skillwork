@@ -40,9 +40,8 @@ export const WorkCardStyles = StyleSheet.create({
 	},
 	button: {
 		marginVertical: sizeNormalizer * 10,
-		backgroundColor: "#D9D9D9",
+		backgroundColor: APP_VALUES.colors.tertiary,
 		width: "50%",
-		fontSize: sizeNormalizer * 16,
 		alignSelf: "center",
 	},
 	status: {
