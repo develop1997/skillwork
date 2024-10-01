@@ -1,3 +1,4 @@
+import { ApplyToJob } from "@/api/Jobs/Create";
 import { DeleteJob } from "@/api/Jobs/DeleteJob";
 import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { FormsStyles } from "@/assets/styles/forms/FormsStyles";
@@ -17,11 +18,23 @@ import { View } from "react-native";
 interface JobViewProps {}
 
 const JobView: FunctionComponent<JobViewProps> = () => {
-	const { setMessage, setMessageVisible, setConfirmVisible } = useRootStore();
+	const {
+		setMessage,
+		setMessageVisible,
+		setConfirmVisible,
+		setApplyedJobs,
+		applyedJobs,
+	} = useRootStore();
 	const [loading, setLoading] = useState(false);
 	const { id } = useLocalSearchParams();
 	const { userJobs } = useRootStore();
 	const router = useRouter();
+
+	const [hasBeenApplied, setHasBeenApplied] = useState(false);
+
+	useEffect(() => {
+		setHasBeenApplied(applyedJobs.some((job: any) => job.id_job === id));
+	}, [applyedJobs]);
 
 	const [job, setJob] = useState<any>();
 
@@ -29,24 +42,28 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 		setJob(userJobs.find((job: any) => job.id_job === id));
 	}, [id]);
 
-	const onDelete = () => {
+	const onApply = () => {
 		setLoading(true);
-		DeleteJob(id as string)
+		ApplyToJob(id as string)
 			.then(() => {
 				setLoading(false);
-				setMessage({ title: "Eliminado", message: "Oferta eliminada" });
+				setApplyedJobs([...applyedJobs, job]);
+				setMessage({ title: "Aprobado", message: "Oferta aprobada" });
 				setMessageVisible(true);
-				router.replace("/home/cliente");
+				router.replace("/home/usuario");
 			})
 			.catch((err) => {
 				setLoading(false);
-				setMessage({ title: "Error", message: err.message });
+				setMessage({
+					title: "Error",
+					message: "No se pudo aprobar la oferta",
+				});
 				setMessageVisible(true);
 			});
 	};
 
 	return (
-		<Layout back onConfirm={onDelete}>
+		<Layout back onConfirm={onApply}>
 			<View>
 				{job ? (
 					<View
@@ -126,12 +143,17 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 								marginTop: sizeNormalizer * 20,
 							}}
 						>
-							<AuthButton
-								text="Eliminar"
-								loading={loading}
-								primaryColor={APP_VALUES.colors.error}
-								onPress={() => setConfirmVisible(true)}
-							/>
+							{!hasBeenApplied ? (
+								<AuthButton
+									text="Aplicar"
+									loading={loading}
+									onPress={() => setConfirmVisible(true)}
+								/>
+							) : (
+								<ThemedText type="default">
+									Ya aplicaste
+								</ThemedText>
+							)}
 						</View>
 					</View>
 				) : (

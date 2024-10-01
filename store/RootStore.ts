@@ -22,6 +22,8 @@ export interface RootStoreType {
 	setUserData: (userData: any) => void;
 	userJobs?: any;
 	setUserJobs: (userJobs: any) => void;
+	applyedJobs?: any;
+	setApplyedJobs: (applyedJobs: any) => void;
 
 	// dialogs
 	message: { title: string; message: string };
@@ -47,6 +49,9 @@ export const useRootStore = create<RootStoreType>((set) => ({
 	userJobs: [],
 	setUserJobs: (userJobs: any) =>
 		set((state: RootStoreType) => ({ ...state, userJobs })),
+	applyedJobs: [],
+	setApplyedJobs: (applyedJobs: any) =>
+		set((state: RootStoreType) => ({ ...state, applyedJobs })),
 	message: { title: "", message: "" },
 	setMessage: (message: { title: string; message: string }) =>
 		set((state: RootStoreType) => ({ ...state, message })),

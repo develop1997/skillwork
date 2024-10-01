@@ -4,7 +4,7 @@ export default function JobsLayout() {
 	return (
 		<Stack>
 			<Stack.Screen
-				name="job"
+				name="[id]"
 				options={{ headerShown: false, animation: "fade" }}
 			/>
 		</Stack>
