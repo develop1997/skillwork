@@ -1,5 +1,5 @@
 import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
-import { sizeNormalizer } from "@/assets/styles/normalizator";
+import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FunctionComponent } from "react";
 import { Image, View } from "react-native";
@@ -19,10 +19,18 @@ const UserItem: FunctionComponent<UserItemProps> = ({
 	key,
 }) => {
 	return (
-		<View key={key} style={GeneralStyles.horizontal}>
+		<View key={key} style={[GeneralStyles.horizontal,{
+			borderWidth: 1,
+			borderColor: APP_VALUES.colors.secondaryLight,
+			width: windowWidth * 0.8,
+			marginVertical: sizeNormalizer * 10,
+			padding: sizeNormalizer * 10,
+			borderRadius: sizeNormalizer * 10,
+		}]}>
 			{image && image != "" ? (
 				<Image
 					style={{
+						padding: sizeNormalizer * 5,
 						width: sizeNormalizer * 30,
 						height: sizeNormalizer * 30,
 						borderRadius: sizeNormalizer * 15,
