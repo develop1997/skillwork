@@ -1,3 +1,3 @@
 export class Enviroment {
-    static readonly BACKEND_API="https://skillwork-back.onrender.com"
+    static readonly BACKEND_API="http://192.168.1.13:3003"
 } 

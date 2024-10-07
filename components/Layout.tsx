@@ -91,10 +91,11 @@ const Layout: FunctionComponent<LayoutProps> = ({
 								borderRadius: sizeNormalizer * 30,
 							}}
 							contentStyle={{
-								height: sizeNormalizer * 60,
+								height: sizeNormalizer * 65,
 							}}
 							labelStyle={{
-								fontSize: sizeNormalizer * 20,
+								fontSize: sizeNormalizer * 18,
+								lineHeight: sizeNormalizer * 20,
 								fontFamily: Fonts.RobotoBold,
 							}}
 							theme={{
@@ -123,10 +124,11 @@ const Layout: FunctionComponent<LayoutProps> = ({
 								borderRadius: sizeNormalizer * 30,
 							}}
 							contentStyle={{
-								height: sizeNormalizer * 60,
+								height: sizeNormalizer * 65,
 							}}
 							labelStyle={{
-								fontSize: sizeNormalizer * 20,
+								fontSize: sizeNormalizer * 18,
+								lineHeight: sizeNormalizer * 20,
 								fontFamily: Fonts.RobotoBold,
 							}}
 							theme={{
@@ -146,10 +148,11 @@ const Layout: FunctionComponent<LayoutProps> = ({
 								borderRadius: sizeNormalizer * 30,
 							}}
 							contentStyle={{
-								height: sizeNormalizer * 60,
+								height: sizeNormalizer * 65,
 							}}
 							labelStyle={{
-								fontSize: sizeNormalizer * 20,
+								fontSize: sizeNormalizer * 18,
+								lineHeight: sizeNormalizer * 20,
 								fontFamily: Fonts.RobotoBold,
 							}}
 							theme={{
