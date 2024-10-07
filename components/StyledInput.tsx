@@ -31,7 +31,7 @@ const AuthInput: FunctionComponent<AuthInputProps> = ({
 				marginVertical: sizeNormalizer * 15,
 				borderRadius: sizeNormalizer * 25,
 				backgroundColor: APP_VALUES.colors.tertiary,
-				fontSize: sizeNormalizer * 22,
+				fontSize: sizeNormalizer * 20,
 				lineHeight: sizeNormalizer * 26,
 				minHeight: sizeNormalizer * 70,
 			}}

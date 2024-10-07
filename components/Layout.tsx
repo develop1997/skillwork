@@ -31,8 +31,8 @@ const Layout: FunctionComponent<LayoutProps> = ({
 	back = false,
 	haveTabs = false,
 	haveTitle = false,
-	TabsHeight = 0,
-	TitleHeight = 0,
+	TabsHeight = APP_VALUES.globalElemtSize.tabHeight,
+	TitleHeight = APP_VALUES.globalElemtSize.headerBarHeight,
 }) => {
 	const {
 		messageVisible,

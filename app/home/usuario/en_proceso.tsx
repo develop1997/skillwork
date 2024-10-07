@@ -16,8 +16,6 @@ const InProgress: FunctionComponent<InProgressProps> = () => {
 		<Layout
 			haveTabs={true}
 			haveTitle={true}
-			TabsHeight={sizeNormalizer * 70}
-			TitleHeight={sizeNormalizer * 80}
 		>
 			<View>
 				{applyedJobs.length !== 0 ? (

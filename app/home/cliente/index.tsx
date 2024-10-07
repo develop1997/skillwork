@@ -19,7 +19,13 @@ const Home: FunctionComponent<HomeProps> = () => {
 	const router = useRouter();
 	const [fetching, setFetching] = useState(true);
 
-	const { userJobs, setUserJobs } = useRootStore();
+	const {
+		userJobs,
+		setUserJobs,
+		userData,
+		setMessage,
+		setMessageVisible,
+	} = useRootStore();
 
 	useEffect(() => {
 		getJobsOfUser()
@@ -41,18 +47,29 @@ const Home: FunctionComponent<HomeProps> = () => {
 	};
 
 	const onAdd = () => {
-		router.push("/forms/cliente/jobForm");
+		if (
+			userData &&
+			(userData.name == "" ||
+				userData.email == "" ||
+				userData.phone == "" ||
+				userData.document == "" ||
+				userData.document_type == "" ||
+				userData.description == "")
+		) {
+			setMessage({
+				title: "Error",
+				message:
+					"Complete todos los campos del Perfil antes de publicar un trabajo",
+			});
+			setMessageVisible(true);
+		} else {
+			router.push("/forms/cliente/jobForm");
+		}
 	};
 
 	return (
 		<>
-			<Layout
-				onScroll={onScroll}
-				haveTabs={true}
-				haveTitle={true}
-				TabsHeight={sizeNormalizer * 70}
-				TitleHeight={sizeNormalizer * 80}
-			>
+			<Layout onScroll={onScroll} haveTabs={true} haveTitle={true}>
 				{fetching ? (
 					<View
 						style={[

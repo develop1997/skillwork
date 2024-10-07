@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { sizeNormalizer, windowHeight, windowWidth } from "./normalizator";
 
 export const GeneralStyles = StyleSheet.create({
@@ -54,6 +54,7 @@ export const GeneralStyles = StyleSheet.create({
 	},
 });
 
+
 export const APP_VALUES = {
 	colors: {
 		primary: "#fff",
@@ -64,5 +65,9 @@ export const APP_VALUES = {
 		disabledTextDark: "#2c2a2a",
 		disabledTextLight: "#7b7b7b",
 		error: "#f94e4e",
+	},
+	globalElemtSize: {
+		tabHeight: windowHeight * 0.08,
+		headerBarHeight: windowHeight * 0.1,
 	},
 };

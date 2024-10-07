@@ -11,15 +11,19 @@ export default function HomeLayout() {
 				tabBarInactiveTintColor: APP_VALUES.colors.disabledTextDark,
 				tabBarStyle: {
 					backgroundColor: APP_VALUES.colors.secondary,
-					height: sizeNormalizer * 70,
+					height: APP_VALUES.globalElemtSize.tabHeight,
+				},
+				tabBarLabelStyle: {
+				  fontSize: sizeNormalizer * 12,
+				  paddingBottom: sizeNormalizer * 10,    
 				},
 				headerStyle: {
 					backgroundColor: APP_VALUES.colors.primary,
-					height: sizeNormalizer * 80,
+					height: APP_VALUES.globalElemtSize.headerBarHeight,
 				},
 				headerTitleStyle: {
 					color: APP_VALUES.colors.secondary,
-					fontSize: sizeNormalizer * 30,
+					fontSize: sizeNormalizer * 28,
 				},
 				headerTitleAlign: "center",
 			}}

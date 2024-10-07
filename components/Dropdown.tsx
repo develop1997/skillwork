@@ -5,6 +5,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import { IconsObject } from "./Icons";
 import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
 import { APP_VALUES } from "@/assets/styles/GeneralStyles";
+import { Icon } from "react-native-paper";
 
 interface Item {
 	title: string;
@@ -74,7 +75,17 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 											} as any,
 										]}
 									>
-										{IconsObject[selectedItem.icon]()}
+										{IconsObject[selectedItem.icon] ? (
+											IconsObject[selectedItem.icon]()
+										) : (
+											<>
+												<Icon
+													size={fontSize}
+													color={foregroundColor}
+													source="file-question"
+												/>
+											</>
+										)}
 									</View>
 								)}
 								<Text
@@ -139,7 +150,17 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 									} as any,
 								]}
 							>
-								{IconsObject[item.icon]()}
+								{IconsObject[item.icon] ? (
+									IconsObject[item.icon]()
+								) : (
+									<>
+										<Icon
+											size={fontSize}
+											color={foregroundColor}
+											source="file-question"
+										/>
+									</>
+								)}
 							</View>
 						)}
 						<Text

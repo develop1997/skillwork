@@ -16,7 +16,7 @@ interface HomeProps {}
 const Home: FunctionComponent<HomeProps> = () => {
 	const router = useNavigation();
 
-	const { logOut, token } = useAuth();
+	const { logOut, token, setTokenReady, tokenReady } = useAuth();
 	const { setUserData, user_role } = useRootStore();
 
 	const setUser_role = useRootStore(
@@ -34,12 +34,17 @@ const Home: FunctionComponent<HomeProps> = () => {
 
 	useEffect(() => {
 		if (token) {
-			configureAxios(token, logOut);
+			configureAxios(token, logOut, setTokenReady);
+		}
+	}, [token]);
+
+	useEffect(() => {
+		if (tokenReady) {
 			GetUserData().then((res) => {
 				setUserData(res);
 			});
 		}
-	}, [token]);
+	}, [tokenReady]);
 
 	useEffect(() => {
 		if (!user_role) {

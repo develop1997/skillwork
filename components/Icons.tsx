@@ -21,4 +21,19 @@ export const IconsObject: Icons = {
 			color={APP_VALUES.colors.text}
 		/>
 	),
+	"id-card": () => (
+		<FontAwesome5
+			name="id-card"
+			size={sizeNormalizer * 24}
+			color={APP_VALUES.colors.text}
+		/>
+	),
+
+	tag: () => (
+		<FontAwesome5
+			name="tag"
+			size={sizeNormalizer * 24}
+			color={APP_VALUES.colors.text}
+		/>
+	),
 };

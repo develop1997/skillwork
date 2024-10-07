@@ -45,8 +45,6 @@ const Home: FunctionComponent<HomeProps> = () => {
 		<Layout
 			haveTabs={true}
 			haveTitle={true}
-			TabsHeight={sizeNormalizer * 70}
-			TitleHeight={sizeNormalizer * 80}
 		>
 			{fetching ? (
 				<View

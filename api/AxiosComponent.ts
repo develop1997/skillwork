@@ -11,7 +11,11 @@ const axiosInstance = axios.create({
 let requestInterceptor: number | null = null;
 let responseInterceptor: number | null = null;
 
-export function configureAxios(token: string, logOut: () => void) {
+export function configureAxios(
+	token: string,
+	logOut: () => void,
+	setTokenReady: (tokenReady: boolean) => void
+) {
 	if (requestInterceptor !== null) {
 		axiosInstance.interceptors.request.eject(requestInterceptor);
 	}
@@ -23,6 +27,9 @@ export function configureAxios(token: string, logOut: () => void) {
 		requestInterceptor = axiosInstance.interceptors.request.use(
 			(config) => {
 				config.headers["Authorization"] = `Bearer ${token}`;
+				setTimeout(() => {
+					setTokenReady(true);
+				}, 100);
 				return config;
 			},
 			(error) => {

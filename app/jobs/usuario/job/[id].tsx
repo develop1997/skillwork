@@ -24,6 +24,7 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 		setConfirmVisible,
 		setApplyedJobs,
 		applyedJobs,
+		userData,
 	} = useRootStore();
 	const [loading, setLoading] = useState(false);
 	const { id } = useLocalSearchParams();
@@ -43,23 +44,43 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 	}, [id]);
 
 	const onApply = () => {
-		setLoading(true);
-		ApplyToJob(id as string)
-			.then(() => {
-				setLoading(false);
-				setApplyedJobs([...applyedJobs, job]);
-				setMessage({ title: "Aprobado", message: "Oferta aprobada" });
-				setMessageVisible(true);
-				router.replace("/home/usuario");
-			})
-			.catch((err) => {
-				setLoading(false);
-				setMessage({
-					title: "Error",
-					message: "No se pudo aprobar la oferta",
-				});
-				setMessageVisible(true);
+		if (
+			userData &&
+			(userData.name == "" ||
+				userData.email == "" ||
+				userData.phone == "" ||
+				userData.document == "" ||
+				userData.document_type == "" ||
+				userData.description == "")
+		) {
+			setMessage({
+				title: "Error",
+				message:
+					"Complete todos los campos del Perfil antes de aplicar a un trabajo",
 			});
+			setMessageVisible(true);
+		} else {
+			setLoading(true);
+			ApplyToJob(id as string)
+				.then(() => {
+					setLoading(false);
+					setApplyedJobs([...applyedJobs, job]);
+					setMessage({
+						title: "Aprobado",
+						message: "Oferta aprobada",
+					});
+					setMessageVisible(true);
+					router.replace("/home/usuario");
+				})
+				.catch((err) => {
+					setLoading(false);
+					setMessage({
+						title: "Error",
+						message: "No se pudo aprobar la oferta",
+					});
+					setMessageVisible(true);
+				});
+		}
 	};
 
 	return (

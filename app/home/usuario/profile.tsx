@@ -23,6 +23,7 @@ import {
 import { Chip } from "react-native-paper";
 import Dropdown from "@/components/Dropdown";
 import { IconText } from "@/components/IconText";
+import { DocumentTypes } from "@/constants/Profile";
 
 interface ProfileProps {}
 
@@ -155,12 +156,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	};
 
 	return (
-		<Layout
-			haveTabs={true}
-			haveTitle={true}
-			TabsHeight={sizeNormalizer * 70}
-			TitleHeight={sizeNormalizer * 80}
-		>
+		<Layout haveTabs={true} haveTitle={true}>
 			<>
 				<View
 					style={[
@@ -225,16 +221,27 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							flex: 1,
 						}}
 					>
-						<AuthInput
-							placeholder="Tipo de identificación"
+						<IconText
 							icon="id-card"
-							value={formData.document_type}
-							onChangeText={(value: string) => {
+							text="Tipo de identificación"
+						/>
+						<Dropdown
+							height={sizeNormalizer * 70}
+							fontSize={sizeNormalizer * 22}
+							textDefault="Selecciona un tipo de identificación"
+							data={DocumentTypes.map((c) => ({
+								title: c,
+								value: c,
+								icon: "id-card",
+							}))}
+							onSelect={(item) => {
 								setFormData({
 									...formData,
-									document_type: value,
+									document_type: item.value,
 								});
 							}}
+							resetAfterSelect={true}
+							showIcon={true}
 						/>
 					</View>
 				</View>
@@ -342,7 +349,6 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									}
 								}}
 								resetAfterSelect={true}
-								showIcon={false}
 							/>
 						)}
 
@@ -367,11 +373,17 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 											height: sizeNormalizer * 30,
 										}}
 										onClose={() => {
+											if(categoriesSelected.length > 1){
+												
 											setCategoriesSelected(
 												categoriesSelected.filter(
 													(cc) => cc !== c
 												)
 											);
+											}else{
+												setCategoriesSelected([]);
+												setServicesSelected([]);
+											}
 										}}
 										closeIcon={() => (
 											<Entypo

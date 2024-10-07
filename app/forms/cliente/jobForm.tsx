@@ -20,6 +20,7 @@ import { CreateJob } from "@/api/Jobs/Create";
 import { isNumercic } from "@/utils/forms/validate";
 import { useRootStore } from "@/store/RootStore";
 import Layout from "@/components/Layout";
+import { AvailableStatus } from "@/components/workCards/WorkCard";
 
 interface JobFormProps {}
 
@@ -31,7 +32,7 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 		description: "",
 		city: "",
 		location: "",
-		salary: "",
+		status: "",
 	});
 	const [requisitos, setRequisitos] = useState<string[]>([]);
 	const [date, setDate] = useState<DateType>(dayjs());
@@ -84,16 +85,6 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 			return;
 		}
 
-		if (!data.salary || isNumercic(data.salary) === false) {
-			setMessage({
-				title: "Error",
-				message: "El salário es requerido y debe ser numérico",
-			});
-			setMessageVisible(true);
-			setLoading(false);
-			return;
-		}
-
 		if (requisitos.length === 0) {
 			setMessage({
 				title: "Error",
@@ -118,7 +109,8 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 			title: data.title,
 			description: data.description,
 			location: data.city + ", " + data.location,
-			salary: data.salary,
+			salary: "0",
+			status: AvailableStatus.PENDIENTE,
 			required_skills: requisitos,
 			expired_at: date,
 		};
@@ -144,7 +136,7 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 					description: "",
 					city: "",
 					location: "",
-					salary: "",
+					status: "",
 				});
 				setRequisitos([]);
 				setRequisito("");
@@ -312,16 +304,6 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 							/>
 						</View>
 					</View>
-				</View>
-				<View style={FormsStyles.formInput}>
-					<AuthInput
-						icon="cash"
-						placeholder="Salario"
-						value={data.salary}
-						onChangeText={(value) =>
-							setData({ ...data, salary: value })
-						}
-					/>
 				</View>
 
 				<AuthButton
