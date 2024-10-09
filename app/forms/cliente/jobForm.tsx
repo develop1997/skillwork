@@ -1,5 +1,5 @@
 import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { StatusBar, View } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { Button, Chip, Dialog, Portal } from "react-native-paper";
@@ -10,7 +10,7 @@ import AuthButton from "@/components/StyledButton";
 import dayjs from "dayjs";
 import DateTimePicker, { DateType } from "react-native-ui-datepicker";
 import { IconText } from "@/components/IconText";
-import { sizeNormalizer } from "@/assets/styles/normalizator";
+import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
 import {
 	GestureHandlerRootView,
 	ScrollView,
@@ -21,6 +21,12 @@ import { isNumercic } from "@/utils/forms/validate";
 import { useRootStore } from "@/store/RootStore";
 import Layout from "@/components/Layout";
 import { AvailableStatus } from "@/components/workCards/WorkCard";
+import {
+	getCategories,
+	getServices,
+} from "@/api/Profile/CategoriesAndServices";
+import { ProfileStyles } from "@/assets/styles/profile/ProfileStyles";
+import Dropdown from "@/components/Dropdown";
 
 interface JobFormProps {}
 
@@ -40,7 +46,37 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 	const [requisito, setRequisito] = useState<string>("");
 	const [loading, setLoading] = useState(false);
 
+	const [services, setServices] = useState<string[]>([]);
+	const [servicesSelected, setServicesSelected] = useState<string[]>([]);
+
+	const [categories, setCategories] = useState<string[]>([]);
+	const [categoriesSelected, setCategoriesSelected] = useState<string[]>([]);
+
 	const { setMessage, setMessageVisible, setConfirmVisible } = useRootStore();
+
+	useEffect(() => {
+		getCategories()
+			.then((res) => {
+				setCategories(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
+
+	useEffect(() => {
+		if (categoriesSelected.length == 0) {
+			setServices([]);
+		} else {
+			getServices(categoriesSelected)
+				.then((res) => {
+					setServices(res);
+				})
+				.catch((err) => {
+					setServices([]);
+				});
+		}
+	}, [categoriesSelected]);
 
 	const createJob = () => {
 		setLoading(true);
@@ -113,6 +149,8 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 			status: AvailableStatus.PENDIENTE,
 			required_skills: requisitos,
 			expired_at: date,
+			categories: categoriesSelected,
+			services: servicesSelected,
 		};
 
 		CreateJob(job)
@@ -268,6 +306,156 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 							setData({ ...data, location: value })
 						}
 					/>
+				</View>
+				<View style={ProfileStyles.Horizontal}>
+					<View
+						style={{
+							width: windowWidth * 0.82,
+						}}
+					>
+						<IconText icon="tag" text="Categorias" />
+						{categories && (
+							<Dropdown
+								height={sizeNormalizer * 70}
+								fontSize={sizeNormalizer * 22}
+								textDefault="Agrega una Categoria"
+								data={categories.map((c) => ({
+									title: c,
+									value: c,
+									icon: "tag",
+								}))}
+								onSelect={(item) => {
+									if (
+										!categoriesSelected.includes(item.value)
+									) {
+										setCategoriesSelected((prev) => [
+											...prev,
+											item.value,
+										]);
+									}
+								}}
+								resetAfterSelect={true}
+							/>
+						)}
+
+						<View
+							style={[
+								GeneralStyles.horizontalWrap,
+								{
+									marginBottom: sizeNormalizer * 20,
+								},
+							]}
+						>
+							{categoriesSelected &&
+								categoriesSelected.map((c) => (
+									<Chip
+										key={c}
+										mode="outlined"
+										textStyle={{
+											fontSize: sizeNormalizer * 16,
+											lineHeight: sizeNormalizer * 20,
+										}}
+										style={{
+											height: sizeNormalizer * 30,
+										}}
+										onClose={() => {
+											if (categoriesSelected.length > 1) {
+												setCategoriesSelected(
+													categoriesSelected.filter(
+														(cc) => cc !== c
+													)
+												);
+											} else {
+												setCategoriesSelected([]);
+												setServicesSelected([]);
+											}
+										}}
+										closeIcon={() => (
+											<Entypo
+												name="cross"
+												size={sizeNormalizer * 20}
+												color={APP_VALUES.colors.text}
+											/>
+										)}
+									>
+										{c}
+									</Chip>
+								))}
+						</View>
+					</View>
+				</View>
+				<View style={ProfileStyles.Horizontal}>
+					<View
+						style={{
+							width: windowWidth * 0.82,
+						}}
+					>
+						<IconText icon="cog" text="Servicios" />
+						{services && (
+							<Dropdown
+								height={sizeNormalizer * 70}
+								fontSize={sizeNormalizer * 22}
+								textDefault="Agrega un Servicio"
+								data={services.map((c) => ({
+									title: c,
+									value: c,
+									icon: "tag",
+								}))}
+								onSelect={(item) => {
+									if (
+										!servicesSelected.includes(item.value)
+									) {
+										setServicesSelected((prev) => [
+											...prev,
+											item.value,
+										]);
+									}
+								}}
+								resetAfterSelect={true}
+								showIcon={false}
+							/>
+						)}
+
+						<View
+							style={[
+								GeneralStyles.horizontalWrap,
+								{
+									marginBottom: sizeNormalizer * 20,
+								},
+							]}
+						>
+							{servicesSelected &&
+								servicesSelected.map((c) => (
+									<Chip
+										key={c}
+										mode="outlined"
+										textStyle={{
+											fontSize: sizeNormalizer * 16,
+											lineHeight: sizeNormalizer * 20,
+										}}
+										style={{
+											height: sizeNormalizer * 30,
+										}}
+										onClose={() => {
+											setServicesSelected(
+												categoriesSelected.filter(
+													(cc) => cc !== c
+												)
+											);
+										}}
+										closeIcon={() => (
+											<Entypo
+												name="cross"
+												size={sizeNormalizer * 20}
+												color={APP_VALUES.colors.text}
+											/>
+										)}
+									>
+										{c}
+									</Chip>
+								))}
+						</View>
+					</View>
 				</View>
 				<View style={FormsStyles.formInput}>
 					<View style={GeneralStyles.vertical}>

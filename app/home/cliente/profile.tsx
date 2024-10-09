@@ -24,7 +24,12 @@ interface ProfileProps {}
 
 const Profile: FunctionComponent<ProfileProps> = () => {
 	const { logOut } = useAuth();
-	const { setMessage, setMessageVisible, userData } = useRootStore();
+	const {
+		setMessage,
+		setMessageVisible,
+		userData,
+		setUserData,
+	} = useRootStore();
 
 	const [formData, setFormData] = useState<any>({
 		name: "",
@@ -84,6 +89,8 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 				});
 				setMessageVisible(true);
 				setLoading(false);
+
+				setUserData({ ...userData, ...data });
 			})
 			.catch((err) => {
 				setMessage({
@@ -91,7 +98,6 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 					message: "Something went wrong, please try again later",
 				});
 				setMessageVisible(true);
-				console.log(err);
 				setFormData({
 					name: userData.name || "",
 					description: userData.description || "",
@@ -122,10 +128,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	};
 
 	return (
-		<Layout
-			haveTabs={true}
-			haveTitle={true}
-		>
+		<Layout haveTabs={true} haveTitle={true}>
 			<>
 				<View
 					style={[
@@ -203,6 +206,11 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								value: c,
 								icon: "id-card",
 							}))}
+							selectedItem={{
+								title: formData.document_type,
+								value: formData.document_type,
+								icon: "id-card",
+							}}
 							onSelect={(item) => {
 								setFormData({
 									...formData,

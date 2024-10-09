@@ -1,6 +1,6 @@
 import { Entypo, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { FunctionComponent, useEffect, useState } from "react";
-import { Alert, Image, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import { ProfileStyles } from "@/assets/styles/profile/ProfileStyles";
 import AuthInput from "@/components/StyledInput";
 import AuthButton from "@/components/StyledButton";
@@ -30,7 +30,12 @@ interface ProfileProps {}
 const Profile: FunctionComponent<ProfileProps> = () => {
 	const { logOut } = useAuth();
 
-	const { userData } = useRootStore();
+	const {
+		setMessage,
+		setMessageVisible,
+		userData,
+		setUserData,
+	} = useRootStore();
 
 	const [services, setServices] = useState<string[]>([]);
 	const [servicesSelected, setServicesSelected] = useState<string[]>([]);
@@ -95,7 +100,8 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 		setLoading(true);
 		// only email is required (login)
 		if (!formData.email) {
-			Alert.alert("Error", "Email Cannot be empty");
+			setMessage({ title: "Error", message: "Email Cannot be empty" });
+			setMessageVisible(true);
 		}
 
 		data["name"] = formData.name;
@@ -118,11 +124,21 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 
 		UpdateUserData(data)
 			.then((res) => {
-				Alert.alert("Success", "Profile updated successfully");
+				setMessage({
+					title: "Success",
+					message: "Profile updated successfully",
+				});
+				setMessageVisible(true);
 				setLoading(false);
+
+				setUserData({ ...userData, ...data });
 			})
 			.catch((err) => {
-				Alert.alert("Error", err.message);
+				setMessage({
+					title: "Error",
+					message: "Something went wrong, please try again later",
+				});
+				setMessageVisible(true);
 				setFormData({
 					name: userData.name || "",
 					description: userData.description || "",
@@ -234,6 +250,11 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								value: c,
 								icon: "id-card",
 							}))}
+							selectedItem={{
+								title: formData.document_type,
+								value: formData.document_type,
+								icon: "id-card",
+							}}
 							onSelect={(item) => {
 								setFormData({
 									...formData,
@@ -373,14 +394,13 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 											height: sizeNormalizer * 30,
 										}}
 										onClose={() => {
-											if(categoriesSelected.length > 1){
-												
-											setCategoriesSelected(
-												categoriesSelected.filter(
-													(cc) => cc !== c
-												)
-											);
-											}else{
+											if (categoriesSelected.length > 1) {
+												setCategoriesSelected(
+													categoriesSelected.filter(
+														(cc) => cc !== c
+													)
+												);
+											} else {
 												setCategoriesSelected([]);
 												setServicesSelected([]);
 											}

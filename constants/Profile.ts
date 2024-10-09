@@ -1,5 +1,5 @@
 export const DocumentTypes = [
-    "Cédula de ciudad",
+    "Cédula de ciudadania",
     "Cédula de extranjería",
     "Tarjeta de identidad",
     "Otra",

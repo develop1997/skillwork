@@ -24,6 +24,7 @@ interface DropdownProps {
 	fontSize: number;
 	resetAfterSelect?: boolean;
 	showIcon?: boolean;
+	selectedItem?: Item;
 }
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
@@ -37,6 +38,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 	fontSize = sizeNormalizer * 22,
 	resetAfterSelect = false,
 	showIcon = true,
+	selectedItem=undefined,
 }) => {
 	const dropdownRef = useRef<SelectDropdown>(null);
 	const clearSelect = () => {
@@ -52,6 +54,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 					clearSelect();
 				}
 			}}
+			defaultValue={selectedItem}
 			renderButton={(selectedItem: Item, isOpened) => {
 				return (
 					<View
