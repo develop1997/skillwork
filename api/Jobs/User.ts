@@ -7,9 +7,31 @@ export async function valorateUser(user_id: string, rate: number) {
 	});
 
 	if (response.status !== 201) {
-		if(response.status === 409){
+		if (response.status === 409) {
 			throw new Error("You already rated this user");
 		}
+		throw new Error(response.data);
+	}
+
+	return response.data;
+}
+
+export async function changeCandidateStatus(
+	job_id: string,
+	user_id: string,
+	status: string,
+	data: any
+) {
+	const response = await axiosInstance.put(
+		`/api/v1/job/application/` + job_id,
+		{
+			user_id,
+			status,
+			data,
+		}
+	);
+
+	if (response.status !== 200) {
 		throw new Error(response.data);
 	}
 

@@ -1,4 +1,4 @@
-import { getJobApplicans } from "@/api/Jobs/getJobs";
+import { getJobApplicans, getJobs } from "@/api/Jobs/getJobs";
 import { GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { FormsStyles } from "@/assets/styles/forms/FormsStyles";
 import { windowWidth } from "@/assets/styles/normalizator";
@@ -7,7 +7,7 @@ import Loader from "@/components/Loader";
 import { ThemedText } from "@/components/ThemedText";
 import UserItem from "@/components/userElement";
 import { useRootStore } from "@/store/RootStore";
-import { useLocalSearchParams } from "expo-router";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { FunctionComponent, useEffect, useState } from "react";
 import { View } from "react-native";
 
@@ -16,7 +16,7 @@ interface JobViewProps {}
 const JobApplicationsView: FunctionComponent<JobViewProps> = () => {
 	const { id } = useLocalSearchParams();
 	const [fetching, setFetching] = useState(true);
-
+	const { userJobs, setUserJobs } = useRootStore();
 	const [applicants, setApplicants] = useState<any[]>([]);
 
 	useEffect(() => {
@@ -31,7 +31,26 @@ const JobApplicationsView: FunctionComponent<JobViewProps> = () => {
 			});
 	}, [id]);
 
-	const { userJobs } = useRootStore();
+	const [refreshing, setRefreshing] = useState(false);
+
+	useFocusEffect(() => {
+		if (refreshing) {
+			return;
+		} else {
+			setRefreshing(true);
+		}
+		setTimeout(() => {
+			getJobs()
+				.then((data) => {
+					setUserJobs(data);
+					setRefreshing(false);
+				})
+				.catch((err) => {
+					setUserJobs([]);
+				});
+		}, 1000);
+	});
+
 	const getStatusFromJob = (job: any, user_id: string) => {
 		let status = "";
 		job.applicants.forEach((applicant: any) => {

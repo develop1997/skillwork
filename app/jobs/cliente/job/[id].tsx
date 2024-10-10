@@ -88,6 +88,23 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 							</View>
 							<View style={JobsGenerals.JobInformationItem}>
 								<IconText
+									icon="briefcase"
+									text="Servicios"
+									margin={sizeNormalizer * 5}
+								/>
+								<UnorderedList items={job.services} />
+							</View>
+
+							<View style={JobsGenerals.JobInformationItem}>
+								<IconText
+									icon="tag"
+									text="Categorías"
+									margin={sizeNormalizer * 5}
+								/>
+								<UnorderedList items={job.categories} />
+							</View>
+							<View style={JobsGenerals.JobInformationItem}>
+								<IconText
 									icon="map-marker"
 									text="Ubicación"
 									margin={sizeNormalizer * 5}

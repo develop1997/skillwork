@@ -14,7 +14,6 @@ interface HomeProps {}
 
 const Home: FunctionComponent<HomeProps> = () => {
 	const [fetching, setFetching] = useState(true);
-	const [page, setPage] = useState(1);
 	const router = useRouter();
 	const { userData, userJobs, setUserJobs, setApplyedJobs } = useRootStore();
 	const [noAppliedJobs, setNoAppliedJobs] = useState([]);
@@ -35,7 +34,7 @@ const Home: FunctionComponent<HomeProps> = () => {
 	}, [userJobs]);
 
 	useEffect(() => {
-		getJobs(page)
+		getJobs()
 			.then((data) => {
 				setUserJobs(data);
 				setFetching(false);

@@ -10,13 +10,8 @@ export async function getJobsOfUser() {
 	return response.data;
 }
 
-export async function getJobs(page: number) {
-	const response = await axiosInstance.get(`/api/v1/job`, {
-		params: {
-			page,
-			limit: 10,
-		},
-	});
+export async function getJobs() {
+	const response = await axiosInstance.get(`/api/v1/job`);
 
 	if (response.status !== 200) {
 		throw new Error(response.data);
