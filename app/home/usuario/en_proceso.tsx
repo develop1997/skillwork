@@ -1,16 +1,17 @@
+import { getAppliedJobs } from "@/api/Jobs/getJobs";
 import { sizeNormalizer } from "@/assets/styles/normalizator";
 import Layout from "@/components/Layout";
 import { ThemedText } from "@/components/ThemedText";
 import WorkCard, { AvailableStatus } from "@/components/workCards/WorkCard";
 import { useRootStore } from "@/store/RootStore";
-import { useRouter } from "expo-router";
-import { FunctionComponent } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { FunctionComponent, useState } from "react";
 import { View } from "react-native";
 
 interface InProgressProps {}
 
 const InProgress: FunctionComponent<InProgressProps> = () => {
-	const { applyedJobs, userData } = useRootStore();
+	const { applyedJobs, userData, setApplyedJobs } = useRootStore();
 	const router = useRouter();
 	const getStatusFromJob = (job: any) => {
 		if (!userData || !userData.id_user) return AvailableStatus.PENDIENTE;
@@ -24,6 +25,25 @@ const InProgress: FunctionComponent<InProgressProps> = () => {
 
 		return status;
 	};
+	const [refreshing, setRefreshing] = useState(false);
+
+	useFocusEffect(() => {
+		if (refreshing) {
+			return;
+		} else {
+			setRefreshing(true);
+		}
+		setTimeout(() => {
+			getAppliedJobs()
+				.then((res) => {
+					setApplyedJobs(res);
+					setRefreshing(false);
+				})
+				.catch((err) => {
+					setApplyedJobs([]);
+				});
+		}, 1000);
+	});
 	return (
 		<Layout haveTabs={true} haveTitle={true}>
 			<View>

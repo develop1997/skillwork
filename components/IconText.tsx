@@ -10,6 +10,7 @@ interface IconTextProps {
 	text: string;
 	fontSize?: number;
 	margin?: number;
+	fontColor?: string;
 }
 
 export const IconText: FunctionComponent<IconTextProps> = ({
@@ -17,6 +18,7 @@ export const IconText: FunctionComponent<IconTextProps> = ({
 	text = "",
 	fontSize = sizeNormalizer * 24,
 	margin = sizeNormalizer * 10,
+	fontColor = APP_VALUES.colors.text,
 }) => {
 	return (
 		<View
@@ -33,7 +35,10 @@ export const IconText: FunctionComponent<IconTextProps> = ({
 				color={APP_VALUES.colors.text}
 				size={sizeNormalizer * 32}
 			/>
-			<ThemedText type="default" style={{ fontSize: fontSize }}>
+			<ThemedText
+				type="default"
+				style={{ fontSize: fontSize, color: fontColor }}
+			>
 				{text}
 			</ThemedText>
 		</View>

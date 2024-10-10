@@ -14,8 +14,8 @@ export default function HomeLayout() {
 					height: APP_VALUES.globalElemtSize.tabHeight,
 				},
 				tabBarLabelStyle: {
-				  fontSize: sizeNormalizer * 12,
-				  paddingBottom: sizeNormalizer * 10,    
+					fontSize: sizeNormalizer * 12,
+					paddingBottom: sizeNormalizer * 10,
 				},
 				headerStyle: {
 					backgroundColor: APP_VALUES.colors.primary,
@@ -35,7 +35,7 @@ export default function HomeLayout() {
 					tabBarIcon: ({ color }) => (
 						<MaterialIcons
 							name="notifications-none"
-							size={28}
+							size={sizeNormalizer * 28}
 							color={color}
 						/>
 					),
@@ -48,7 +48,7 @@ export default function HomeLayout() {
 					tabBarIcon: ({ color }) => (
 						<MaterialIcons
 							name="work-outline"
-							size={28}
+							size={sizeNormalizer * 28}
 							color={color}
 						/>
 					),
@@ -59,7 +59,11 @@ export default function HomeLayout() {
 				options={{
 					title: "Perfil",
 					tabBarIcon: ({ color }) => (
-						<AntDesign name="profile" size={28} color={color} />
+						<AntDesign
+							name="profile"
+							size={sizeNormalizer * 28}
+							color={color}
+						/>
 					),
 				}}
 			/>

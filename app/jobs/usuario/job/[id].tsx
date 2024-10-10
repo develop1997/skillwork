@@ -1,17 +1,20 @@
 import { ApplyToJob } from "@/api/Jobs/Create";
 import { DeleteJob } from "@/api/Jobs/DeleteJob";
+import { getAppliedJobs } from "@/api/Jobs/getJobs";
 import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { FormsStyles } from "@/assets/styles/forms/FormsStyles";
 import { JobsGenerals } from "@/assets/styles/jobs/geerals";
 import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
+import { ProfileStyles } from "@/assets/styles/profile/ProfileStyles";
 import { IconText } from "@/components/IconText";
 import Layout from "@/components/Layout";
 import Loader from "@/components/Loader";
 import AuthButton from "@/components/StyledButton";
 import { ThemedText } from "@/components/ThemedText";
 import UnorderedList from "@/components/UnorderedList";
+import { statusColors } from "@/components/workCards/WorkCard";
 import { useRootStore } from "@/store/RootStore";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { FunctionComponent, useEffect, useState } from "react";
 import { View } from "react-native";
 
@@ -24,7 +27,7 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 		setConfirmVisible,
 		setApplyedJobs,
 		applyedJobs,
-		userData, userJobs
+		userData,
 	} = useRootStore();
 	const [loading, setLoading] = useState(false);
 	const { id } = useLocalSearchParams();
@@ -39,8 +42,8 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 	const [job, setJob] = useState<any>();
 
 	useEffect(() => {
-		setJob(userJobs.find((job: any) => job.id_job === id));
-	}, [id]);
+		setJob(applyedJobs.find((job: any) => job.id_job === id));
+	}, [id, applyedJobs]);
 
 	const onApply = () => {
 		if (
@@ -81,6 +84,25 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 				});
 		}
 	};
+	const [refreshing, setRefreshing] = useState(false);
+
+	useFocusEffect(() => {
+		if (refreshing) {
+			return;
+		} else {
+			setRefreshing(true);
+		}
+		setTimeout(() => {
+			getAppliedJobs()
+				.then((res) => {
+					setApplyedJobs(res);
+					setRefreshing(false);
+				})
+				.catch((err) => {
+					setApplyedJobs([]);
+				});
+		}, 1000);
+	});
 
 	return (
 		<Layout back onConfirm={onApply}>
@@ -101,6 +123,28 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 						<View>
 							<View style={JobsGenerals.JobInformationItem}>
 								<IconText
+									fontColor={
+										statusColors[
+											job.applicants.find(
+												(app: any) =>
+													app.id_user ===
+													userData.id_user
+											)?.status
+										]
+									}
+									icon="alert-rhombus-outline"
+									text={
+										"Estado: " +
+										job.applicants.find(
+											(app: any) =>
+												app.id_user === userData.id_user
+										)?.status
+									}
+									margin={sizeNormalizer * 5}
+								/>
+							</View>
+							<View style={JobsGenerals.JobInformationItem}>
+								<IconText
 									icon="briefcase"
 									text="Descripción"
 									margin={sizeNormalizer * 5}
@@ -117,6 +161,24 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 								/>
 								<UnorderedList items={job.required_skills} />
 							</View>
+							<View style={JobsGenerals.JobInformationItem}>
+								<IconText
+									icon="briefcase"
+									text="Servicios"
+									margin={sizeNormalizer * 5}
+								/>
+								<UnorderedList items={job.services} />
+							</View>
+
+							<View style={JobsGenerals.JobInformationItem}>
+								<IconText
+									icon="tag"
+									text="Categorías"
+									margin={sizeNormalizer * 5}
+								/>
+								<UnorderedList items={job.categories} />
+							</View>
+
 							<View style={JobsGenerals.JobInformationItem}>
 								<IconText
 									icon="map-marker"
@@ -149,9 +211,12 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 							</View>
 						</View>
 						<View
-							style={{
-								marginTop: sizeNormalizer * 20,
-							}}
+							style={[
+								ProfileStyles.Horizontal,
+								{
+									marginVertical: sizeNormalizer * 30,
+								},
+							]}
 						>
 							{!hasBeenApplied ? (
 								<AuthButton
@@ -160,9 +225,15 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 									onPress={() => setConfirmVisible(true)}
 								/>
 							) : (
-								<ThemedText type="default">
-									Ya aplicaste
-								</ThemedText>
+								<AuthButton
+									text="Cambiar estado"
+									loading={loading}
+									onPress={() =>
+										router.push(
+											`/jobs/usuario/status/${id}` as any
+										)
+									}
+								/>
 							)}
 						</View>
 					</View>

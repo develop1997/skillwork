@@ -12,7 +12,7 @@ import AuthInput from "@/components/StyledInput";
 import { ThemedText } from "@/components/ThemedText";
 import { AvailableStatus } from "@/components/workCards/WorkCard";
 import { useRootStore } from "@/store/RootStore";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { FunctionComponent, useEffect, useState } from "react";
 import { View } from "react-native";
 
@@ -23,52 +23,38 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 		setMessage,
 		setMessageVisible,
 		userData,
-		userJobs,
+		applyedJobs,
+		setApplyedJobs,
 	} = useRootStore();
 	const [loading, setLoading] = useState(false);
 	const { data } = useLocalSearchParams();
 	const [fetching, setFetching] = useState(true);
-	const [applicants, setApplicants] = useState<any[]>([]);
-
-	useEffect(() => {
-		getJobApplicans((data as string).split(";")[1])
-			.then((res) => {
-				setApplicants(res);
-				setFetching(false);
-			})
-			.catch((err) => {
-				setFetching(false);
-				setApplicants([]);
-			});
-	}, [data]);
-
-	const [user, setUser] = useState<any>();
 	const [job, setJob] = useState<any>();
-
-	useEffect(() => {
-		setJob(
-			userJobs.find(
-				(job: any) => job.id_job === (data as string).split(";")[1]
-			)
-		);
-	}, [userJobs]);
-
-	useEffect(() => {
-		setUser(
-			applicants.find(
-				(user: any) => user.id_user === (data as string).split(";")[0]
-			)
-		);
-	}, [applicants]);
-
+	const router = useRouter();
 	const [rejectCotization, setRejectCotization] = useState(false);
 	const [salary, setSalary] = useState<any>(0);
+	const [user, setUser] = useState<any>();
+
+	useEffect(() => {
+		setJob(applyedJobs.find((job: any) => job.id_job === (data as string)));
+	}, [applyedJobs]);
+
+	useEffect(() => {
+		if (job) {
+			setFetching(false);
+			setUser(
+				job.applicants.find(
+					(applicant: any) => applicant.id_user === userData.id_user
+				)
+			);
+		}
+	}, [job]);
 
 	const onChangeStatus = (status: string, dataSent: any) => {
 		setLoading(true);
 		changeCandidateStatus(
-			(data as string).split(";")[1],
-			user.id_user,
+			data as string,
+			userData.id_user,
 			status,
 			dataSent
 		)
@@ -79,8 +65,28 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 					title: "Ok",
 					message: "Aceptado",
 				});
-				setUser({ ...user, status: status, data: dataSent });
 				setMessageVisible(true);
+				const updatedJob = {
+					...job,
+					applicants: [
+						job.applicants.filter(
+							(applicant: any) =>
+								applicant.id_user !== userData.id_user
+						),
+						{
+							id_user: userData.id_user,
+							status: status,
+							data: dataSent,
+						},
+					],
+				};
+
+				setApplyedJobs([
+					...applyedJobs.filter(
+						(job: any) => job.id_job !== updatedJob.id_job
+					),
+					updatedJob,
+				]);
 			})
 			.catch((err) => {
 				setLoading(false);
@@ -92,6 +98,8 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 				setMessageVisible(true);
 			});
 	};
+
+	console.log(applyedJobs);
 
 	const onRejectCandidate = () => {
 		onChangeStatus(AvailableStatus.CANCELADO, undefined);
@@ -110,10 +118,11 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 			salary: salary,
 		});
 	};
+
 	return (
 		<Layout back>
 			<View style={GeneralStyles.centeredVertical}>
-				{user && !fetching ? (
+				{!fetching ? (
 					<>
 						<ThemedText type="title" style={FormsStyles.formTitle}>
 							{job.title} - {user.status}
@@ -124,7 +133,7 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 									<ThemedText type="default">
 										{rejectCotization
 											? "Proponiendo una cotización"
-											: "Esperando a que el usuario proponga una cotización"}
+											: "El cliente esta esperando que propongas una cotización"}
 									</ThemedText>
 									{rejectCotization && (
 										<>
@@ -180,7 +189,7 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 											}}
 										/>
 										<AuthButton
-											text="Rechazar Candidato"
+											text="Rechazar Oferta"
 											loading={loading}
 											onPress={onRejectCandidate}
 											primaryColor={
@@ -196,8 +205,8 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 											? "Propón una cotización"
 											: user.data?.proposer_id ===
 											  userData.id_user
-											? "Esperando a que el usuario acepte la cotización que propusiste"
-											: "El usuario esta esperando a que aceptes su cotización"}
+											? "Esperando a que el cliente acepte la cotización que propusiste"
+											: "El cliente esta esperando a que aceptes su cotización"}
 									</ThemedText>
 
 									<IconText
@@ -263,7 +272,7 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 											}}
 										/>
 										<AuthButton
-											text="Rechazar Candidato"
+											text="Rechazar Oferta"
 											loading={loading}
 											onPress={onRejectCandidate}
 											primaryColor={
@@ -287,8 +296,7 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 							) : user.status == AvailableStatus.TERMINADO ? (
 								<View style={GeneralStyles.centeredVertical}>
 									<ThemedText type="default">
-										Completado, recuerda calificar al
-										candidato
+										Completado.
 									</ThemedText>
 								</View>
 							) : user.status == AvailableStatus.CANCELADO ? (
@@ -302,14 +310,6 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 									<ThemedText type="default">
 										En proceso
 									</ThemedText>
-								</View>
-							) : user.status == AvailableStatus.EN_REVISION ? (
-								<View style={GeneralStyles.centeredVertical}>
-									<IconText
-										icon="check"
-										text="EL usuario esta esperando que confirmes la terminación del acuerdo"
-										margin={sizeNormalizer * 30}
-									/>
 									<View
 										style={[
 											ProfileStyles.Horizontal,
@@ -320,19 +320,28 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 										]}
 									>
 										<AuthButton
-											text="Aceptar respuesta"
+											text="Marcar para revisión"
 											loading={loading}
-											onPress={onAceptResult}
-										/>
-										<AuthButton
-											text="Rechazar respuesta"
-											loading={loading}
-											onPress={onRejectResult}
-											primaryColor={
-												APP_VALUES.colors.error
-											}
+											onPress={() => {
+												onChangeStatus(
+													AvailableStatus.EN_REVISION,
+													{
+														salary,
+														proposer_id:
+															userData.id_user,
+													}
+												);
+											}}
 										/>
 									</View>
+								</View>
+							) : user.status == AvailableStatus.EN_REVISION ? (
+								<View style={GeneralStyles.centeredVertical}>
+									<IconText
+										icon="check"
+										text="EL cliente esta revisando tu respuesta"
+										margin={sizeNormalizer * 30}
+									/>
 								</View>
 							) : (
 								<View style={GeneralStyles.centeredVertical}>
