@@ -7,9 +7,6 @@ export async function valorateUser(user_id: string, rate: number) {
 	});
 
 	if (response.status !== 201) {
-		if (response.status === 409) {
-			throw new Error("You already rated this user");
-		}
 		throw new Error(response.data);
 	}
 

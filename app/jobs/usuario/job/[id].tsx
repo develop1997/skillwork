@@ -1,7 +1,6 @@
 import { ApplyToJob } from "@/api/Jobs/Create";
-import { DeleteJob } from "@/api/Jobs/DeleteJob";
 import { getAppliedJobs } from "@/api/Jobs/getJobs";
-import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
+import { GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { FormsStyles } from "@/assets/styles/forms/FormsStyles";
 import { JobsGenerals } from "@/assets/styles/jobs/geerals";
 import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";

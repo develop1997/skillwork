@@ -1,6 +1,6 @@
 import { valorateUser } from "@/api/Jobs/User";
 import { getJobApplicans } from "@/api/Jobs/getJobs";
-import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
+import { GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { FormsStyles } from "@/assets/styles/forms/FormsStyles";
 import { JobsGenerals } from "@/assets/styles/jobs/geerals";
 import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
@@ -12,7 +12,7 @@ import AuthButton from "@/components/StyledButton";
 import { ThemedText } from "@/components/ThemedText";
 import UnorderedList from "@/components/UnorderedList";
 import { useRootStore } from "@/store/RootStore";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { FunctionComponent, useEffect, useState } from "react";
 import { View, Image } from "react-native";
 import { AirbnbRating } from "react-native-ratings";
@@ -96,7 +96,7 @@ const UserView: FunctionComponent<UserViewProps> = () => {
 			setLoading(false);
 			setMessage({
 				title: "Error",
-				message: err.message,
+				message: "Ya valoraste este usuario",
 			});
 			setMessageVisible(true);
 		})
