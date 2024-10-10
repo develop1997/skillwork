@@ -6,19 +6,21 @@ import { WorkCardStyles as styles } from "./WorkCardStyles";
 import { APP_VALUES } from "@/assets/styles/GeneralStyles";
 
 export class AvailableStatus {
+	static readonly PENDIENTE = "Pendiente";
+	static readonly EN_COTIZACION = "En Cotizacion";
 	static readonly EN_PROCESO = "En Proceso";
+	static readonly EN_REVISION = "En Revision";
 	static readonly TERMINADO = "Terminado";
 	static readonly CANCELADO = "Cancelado";
-	static readonly EN_REVISION = "En Revision";
-	static readonly PENDIENTE = "Pendiente";
 }
 
-const statusColors = {
+export const statusColors: { [key: string]: string } = {
+	[AvailableStatus.PENDIENTE]: "#FA00FF",
+	[AvailableStatus.EN_COTIZACION]: "#CEF21B",
 	[AvailableStatus.EN_PROCESO]: "#0FA5EA",
+	[AvailableStatus.EN_REVISION]: "#EA720F",
 	[AvailableStatus.TERMINADO]: "#2CF432",
 	[AvailableStatus.CANCELADO]: "#EA0F0F",
-	[AvailableStatus.EN_REVISION]: "#EA720F",
-	[AvailableStatus.PENDIENTE]: "#CEF21B",
 };
 
 interface WorkCardProps {
@@ -76,8 +78,8 @@ const WorkCard: FunctionComponent<WorkCardProps> = ({
 					{status && (
 						<View
 							style={[
-								styles.status,
 								{
+									...styles.status,
 									backgroundColor: statusColors[status],
 								},
 							]}

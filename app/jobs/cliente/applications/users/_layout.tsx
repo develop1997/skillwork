@@ -7,14 +7,6 @@ export default function JobsLayout() {
 				name="[id]"
 				options={{ headerShown: false, animation: "fade" }}
 			/>
-			<Stack.Screen
-				name="users"
-				options={{ headerShown: false, animation: "fade" }}
-			/>
-			<Stack.Screen
-				name="status"
-				options={{ headerShown: false, animation: "fade" }}
-			/>
 		</Stack>
 	);
 }

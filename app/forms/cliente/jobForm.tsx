@@ -145,7 +145,6 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 			title: data.title,
 			description: data.description,
 			location: data.city + ", " + data.location,
-			salary: "0",
 			status: AvailableStatus.PENDIENTE,
 			required_skills: requisitos,
 			expired_at: date,
@@ -169,6 +168,8 @@ const JobForm: FunctionComponent<JobFormProps> = () => {
 						created_at: dayjs().format("YYYY-MM-DD"),
 					},
 				]);
+				setServicesSelected([]);
+				setCategoriesSelected([]);
 				setData({
 					title: "",
 					description: "",

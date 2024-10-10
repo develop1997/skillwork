@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import Loader from "@/components/Loader";
 import { ThemedText } from "@/components/ThemedText";
 import UserItem from "@/components/userElement";
+import { useRootStore } from "@/store/RootStore";
 import { useLocalSearchParams } from "expo-router";
 import { FunctionComponent, useEffect, useState } from "react";
 import { View } from "react-native";
@@ -30,6 +31,18 @@ const JobApplicationsView: FunctionComponent<JobViewProps> = () => {
 			});
 	}, [id]);
 
+	const { userJobs } = useRootStore();
+	const getStatusFromJob = (job: any, user_id: string) => {
+		let status = "";
+		job.applicants.forEach((applicant: any) => {
+			if (applicant.id_user === user_id) {
+				status = applicant.status;
+			}
+		});
+
+		return status;
+	};
+
 	return (
 		<Layout back>
 			<View>
@@ -49,7 +62,14 @@ const JobApplicationsView: FunctionComponent<JobViewProps> = () => {
 							<>
 								{applicants.map((applicant) => (
 									<UserItem
+										status={getStatusFromJob(
+											userJobs.find(
+												(job: any) => job.id_job === id
+											),
+											applicant.id_user
+										)}
 										key={applicant.id_user}
+										keyValue={applicant.id_user + ";" + id}
 										image={applicant.image}
 										name={applicant.name}
 										email={applicant.email}

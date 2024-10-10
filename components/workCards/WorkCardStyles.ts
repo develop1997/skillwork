@@ -47,7 +47,7 @@ export const WorkCardStyles = StyleSheet.create({
 	status: {
 		width: sizeNormalizer * 20,
 		height: sizeNormalizer * 20,
-		borderRadius: sizeNormalizer * 10,
+		borderRadius: sizeNormalizer * 20,
 		marginVertical: sizeNormalizer * 10,
 		marginHorizontal: sizeNormalizer * 20,
 	},

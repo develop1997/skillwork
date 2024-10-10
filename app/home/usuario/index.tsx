@@ -16,11 +16,23 @@ const Home: FunctionComponent<HomeProps> = () => {
 	const [fetching, setFetching] = useState(true);
 	const [page, setPage] = useState(1);
 	const router = useRouter();
-	const {
-		userJobs,
-		setUserJobs,
-		setApplyedJobs,
-	} = useRootStore();
+	const { userData, userJobs, setUserJobs, setApplyedJobs } = useRootStore();
+	const [noAppliedJobs, setNoAppliedJobs] = useState([]);
+
+	useEffect(() => {
+		if (userJobs.length !== 0) {
+			if (!userData || !userData.id_user) return;
+			setNoAppliedJobs(
+				userJobs.filter((job: any) => {
+					if (job.applicants && job.applicants.length !== 0) {
+						return job.applicants.find(
+							(app: any) => app.id_user !== userData.id_user
+						);
+					}
+				})
+			);
+		}
+	}, [userJobs]);
 
 	useEffect(() => {
 		getJobs(page)
@@ -42,10 +54,7 @@ const Home: FunctionComponent<HomeProps> = () => {
 	}, []);
 
 	return (
-		<Layout
-			haveTabs={true}
-			haveTitle={true}
-		>
+		<Layout haveTabs={true} haveTitle={true}>
 			{fetching ? (
 				<View
 					style={[
@@ -59,9 +68,9 @@ const Home: FunctionComponent<HomeProps> = () => {
 				</View>
 			) : (
 				<View>
-					{userJobs.length !== 0 ? (
+					{noAppliedJobs.length !== 0 ? (
 						<>
-							{userJobs.map((job: any) => (
+							{noAppliedJobs.map((job: any) => (
 								<WorkCard
 									key={job.id_job}
 									title={job.title}

@@ -10,6 +10,7 @@ import Loader from "@/components/Loader";
 import AuthButton from "@/components/StyledButton";
 import { ThemedText } from "@/components/ThemedText";
 import UnorderedList from "@/components/UnorderedList";
+import { AvailableStatus } from "@/components/workCards/WorkCard";
 import { useRootStore } from "@/store/RootStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { FunctionComponent, useEffect, useState } from "react";
@@ -113,16 +114,6 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 								/>
 								<ThemedText type="default">
 									{job.expired_at}
-								</ThemedText>
-							</View>
-							<View style={JobsGenerals.JobInformationItem}>
-								<IconText
-									icon="cash"
-									text="Salario"
-									margin={sizeNormalizer * 5}
-								/>
-								<ThemedText type="default">
-									${job.salary}
 								</ThemedText>
 							</View>
 						</View>

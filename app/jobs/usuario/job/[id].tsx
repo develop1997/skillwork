@@ -24,11 +24,10 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 		setConfirmVisible,
 		setApplyedJobs,
 		applyedJobs,
-		userData,
+		userData, userJobs
 	} = useRootStore();
 	const [loading, setLoading] = useState(false);
 	const { id } = useLocalSearchParams();
-	const { userJobs } = useRootStore();
 	const router = useRouter();
 
 	const [hasBeenApplied, setHasBeenApplied] = useState(false);
@@ -146,16 +145,6 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 								/>
 								<ThemedText type="default">
 									{job.expired_at}
-								</ThemedText>
-							</View>
-							<View style={JobsGenerals.JobInformationItem}>
-								<IconText
-									icon="cash"
-									text="Salario"
-									margin={sizeNormalizer * 5}
-								/>
-								<ThemedText type="default">
-									${job.salary}
 								</ThemedText>
 							</View>
 						</View>
