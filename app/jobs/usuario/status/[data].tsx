@@ -99,8 +99,6 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 			});
 	};
 
-	console.log(applyedJobs);
-
 	const onRejectCandidate = () => {
 		onChangeStatus(AvailableStatus.CANCELADO, undefined);
 	};

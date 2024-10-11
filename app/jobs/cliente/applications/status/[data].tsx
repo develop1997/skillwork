@@ -1,7 +1,8 @@
-import { changeCandidateStatus } from "@/api/Jobs/User";
+import { changeCandidateStatus, valorateUser } from "@/api/Jobs/User";
 import { getJobApplicans } from "@/api/Jobs/getJobs";
 import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { FormsStyles } from "@/assets/styles/forms/FormsStyles";
+import { JobsGenerals } from "@/assets/styles/jobs/geerals";
 import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
 import { ProfileStyles } from "@/assets/styles/profile/ProfileStyles";
 import { IconText } from "@/components/IconText";
@@ -15,6 +16,7 @@ import { useRootStore } from "@/store/RootStore";
 import { useLocalSearchParams } from "expo-router";
 import { FunctionComponent, useEffect, useState } from "react";
 import { View } from "react-native";
+import { AirbnbRating } from "react-native-ratings";
 
 interface UserViewProps {}
 
@@ -44,6 +46,7 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 
 	const [user, setUser] = useState<any>();
 	const [job, setJob] = useState<any>();
+	const [valoration, setValoration] = useState(0);
 
 	useEffect(() => {
 		setJob(
@@ -93,6 +96,36 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 			});
 	};
 
+	const onValoration = () => {
+		setLoading(true);
+		valorateUser((data as string).split(";")[0], valoration)
+			.then(() => {
+				setMessage({
+					title: "Valorado",
+					message: "Usuario valorado",
+				});
+				setMessageVisible(true);
+				setUser({
+					...user,
+					valorations: [
+						...user?.valorations,
+						{
+							user_id: userData.id,
+							rate: valoration,
+						},
+					],
+				});
+				setLoading(false);
+			})
+			.catch((err) => {
+				setLoading(false);
+				setMessage({
+					title: "Error",
+					message: "Ya valoraste este usuario",
+				});
+				setMessageVisible(true);
+			});
+	};
 	const onRejectCandidate = () => {
 		onChangeStatus(AvailableStatus.CANCELADO, undefined);
 	};
@@ -290,6 +323,41 @@ const UserJobStatusView: FunctionComponent<UserViewProps> = () => {
 										Completado, recuerda calificar al
 										candidato
 									</ThemedText>
+
+									<IconText
+										icon="star"
+										text={"Calificacion"}
+										margin={sizeNormalizer * 15}
+									/>
+									<AirbnbRating
+										count={5}
+										reviews={[
+											"Peor",
+											"Pobre",
+											"Regular",
+											"Buena",
+											"Excelente",
+										]}
+										size={sizeNormalizer * 30}
+										onFinishRating={(valoration) =>
+											setValoration(valoration)
+										}
+									/>
+									<View
+										style={[
+											ProfileStyles.Horizontal,
+											{
+												marginVertical:
+													sizeNormalizer * 30,
+											},
+										]}
+									>
+										<AuthButton
+											text="Calificar Usuario"
+											loading={loading}
+											onPress={onValoration}
+										/>
+									</View>
 								</View>
 							) : user.status == AvailableStatus.CANCELADO ? (
 								<View style={GeneralStyles.centeredVertical}>

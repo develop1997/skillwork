@@ -32,7 +32,7 @@ export const IconText: FunctionComponent<IconTextProps> = ({
 		>
 			<Icon
 				source={icon}
-				color={APP_VALUES.colors.text}
+				color={fontColor}
 				size={sizeNormalizer * 32}
 			/>
 			<ThemedText

@@ -4,10 +4,10 @@ import { Image, TouchableOpacity, View } from "react-native";
 import { ProfileStyles } from "@/assets/styles/profile/ProfileStyles";
 import AuthInput from "@/components/StyledInput";
 import AuthButton from "@/components/StyledButton";
-import { sizeNormalizer } from "@/assets/styles/normalizator";
+import { sizeNormalizer, windowWidth } from "@/assets/styles/normalizator";
 import { APP_VALUES, GeneralStyles } from "@/assets/styles/GeneralStyles";
 import { useAuth } from "@/components/hooks/useAuth";
-import { UpdateUserData } from "@/api/Profile/userData";
+import { GetUserData, UpdateUserData } from "@/api/Profile/userData";
 import { useRootStore } from "@/store/RootStore";
 import { uriToBuffer } from "@/utils/files/Image";
 import {
@@ -24,6 +24,8 @@ import { Chip } from "react-native-paper";
 import Dropdown from "@/components/Dropdown";
 import { IconText } from "@/components/IconText";
 import { DocumentTypes } from "@/constants/Profile";
+import { JobsGenerals } from "@/assets/styles/jobs/geerals";
+import { AirbnbRating } from "react-native-ratings";
 
 interface ProfileProps {}
 
@@ -51,6 +53,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 		image: null,
 		document: "",
 		document_type: "",
+		valorations: [],
 	});
 
 	useEffect(() => {
@@ -90,6 +93,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 				image: userData.image || null,
 				document: userData.document || "",
 				document_type: userData.document_type || "",
+				valorations: userData.valorations || [],
 			});
 		}
 	}, [userData]);
@@ -124,14 +128,15 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 
 		UpdateUserData(data)
 			.then((res) => {
-				setMessage({
-					title: "Success",
-					message: "Profile updated successfully",
+				GetUserData().then((res) => {
+					setUserData(res);
+					setMessage({
+						title: "Success",
+						message: "Profile updated successfully",
+					});
+					setMessageVisible(true);
+					setLoading(false);
 				});
-				setMessageVisible(true);
-				setLoading(false);
-
-				setUserData({ ...userData, ...data });
 			})
 			.catch((err) => {
 				setMessage({
@@ -155,6 +160,29 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 			});
 	};
 
+	const [valorations, setValorations] = useState({
+		amount: 0,
+		average: 0,
+	});
+	useEffect(() => {
+		if (
+			formData &&
+			formData.valorations &&
+			formData.valorations.length > 0
+		) {
+			//calculate valorations
+			let average = 0;
+			formData.valorations.forEach((valoration: any) => {
+				average += valoration.rate / formData.valorations.length;
+			});
+			setValorations({ amount: formData.valorations.length, average });
+
+			//get if user has already valorated
+			const myValoration = formData.valorations.find(
+				(valoration: any) => valoration.user_id === userData.id
+			);
+		}
+	}, [formData]);
 	const onSelectImage = async () => {
 		const { status } = await requestMediaLibraryPermissionsAsync();
 		if (status == "granted") {
@@ -230,6 +258,36 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							}}
 						/>
 					</View>
+				</View>
+
+				<View
+					style={{
+						width: windowWidth * 0.95,
+						marginLeft: sizeNormalizer * 15,
+					}}
+				>
+					<IconText
+						icon="star"
+						text={
+							"Calificacion (" +
+							valorations.amount +
+							" valoraciones)"
+						}
+
+					/>
+					<AirbnbRating
+						count={5}
+						isDisabled
+						reviews={[
+							"Peor",
+							"Pobre",
+							"Regular",
+							"Buena",
+							"Excelente",
+						]}
+						defaultRating={valorations.average}
+						size={sizeNormalizer * 30}
+					/>
 				</View>
 				<View style={ProfileStyles.Horizontal}>
 					<View

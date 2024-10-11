@@ -18,16 +18,18 @@ const Home: FunctionComponent<HomeProps> = () => {
 	const { userData, userJobs, setUserJobs, setApplyedJobs } = useRootStore();
 	const [noAppliedJobs, setNoAppliedJobs] = useState([]);
 
+	console.log(noAppliedJobs.length);
 	useEffect(() => {
 		if (userJobs.length !== 0) {
 			if (!userData || !userData.id_user) return;
 			setNoAppliedJobs(
 				userJobs.filter((job: any) => {
 					if (job.applicants && job.applicants.length !== 0) {
-						return job.applicants.find(
+						return job.applicants.every(
 							(app: any) => app.id_user !== userData.id_user
 						);
 					}
+					return true;
 				})
 			);
 		}

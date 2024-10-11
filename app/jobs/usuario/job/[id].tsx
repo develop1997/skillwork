@@ -27,6 +27,7 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 		setApplyedJobs,
 		applyedJobs,
 		userData,
+		userJobs,
 	} = useRootStore();
 	const [loading, setLoading] = useState(false);
 	const { id } = useLocalSearchParams();
@@ -41,7 +42,11 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 	const [job, setJob] = useState<any>();
 
 	useEffect(() => {
-		setJob(applyedJobs.find((job: any) => job.id_job === id));
+		if (applyedJobs.find((job: any) => job.id_job === id)) {
+			setJob(applyedJobs.find((job: any) => job.id_job === id));
+		} else {
+			setJob(userJobs.find((job: any) => job.id_job === id));
+		}
 	}, [id, applyedJobs]);
 
 	const onApply = () => {
@@ -120,28 +125,31 @@ const JobView: FunctionComponent<JobViewProps> = () => {
 						</ThemedText>
 
 						<View>
-							<View style={JobsGenerals.JobInformationItem}>
-								<IconText
-									fontColor={
-										statusColors[
+							{hasBeenApplied && (
+								<View style={JobsGenerals.JobInformationItem}>
+									<IconText
+										fontColor={
+											statusColors[
+												job.applicants.find(
+													(app: any) =>
+														app.id_user ===
+														userData.id_user
+												)?.status
+											]
+										}
+										icon="alert-rhombus-outline"
+										text={
+											"Estado: " +
 											job.applicants.find(
 												(app: any) =>
 													app.id_user ===
 													userData.id_user
 											)?.status
-										]
-									}
-									icon="alert-rhombus-outline"
-									text={
-										"Estado: " +
-										job.applicants.find(
-											(app: any) =>
-												app.id_user === userData.id_user
-										)?.status
-									}
-									margin={sizeNormalizer * 5}
-								/>
-							</View>
+										}
+										margin={sizeNormalizer * 5}
+									/>
+								</View>
+							)}
 							<View style={JobsGenerals.JobInformationItem}>
 								<IconText
 									icon="briefcase"

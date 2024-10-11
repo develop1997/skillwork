@@ -25,6 +25,10 @@ const UserView: FunctionComponent<UserViewProps> = () => {
 	const { id } = useLocalSearchParams();
 	const [fetching, setFetching] = useState(true);
 	const [applicants, setApplicants] = useState<any[]>([]);
+	const [valorations, setValorations] = useState({
+		amount: 0,
+		average: 0,
+	});
 	const [valoration, setValoration] = useState(0);
 
 	useEffect(() => {
@@ -49,10 +53,6 @@ const UserView: FunctionComponent<UserViewProps> = () => {
 		);
 	}, [applicants]);
 
-	const [valorations, setValorations] = useState({
-		amount: 0,
-		average: 0,
-	});
 	useEffect(() => {
 		if (user && user.valorations && user.valorations.length > 0) {
 			//calculate valorations
@@ -72,35 +72,6 @@ const UserView: FunctionComponent<UserViewProps> = () => {
 			}
 		}
 	}, [user]);
-
-	const onValoration = () => {
-		setLoading(true);
-		valorateUser((id as string).split(";")[0], valoration).then(() => {
-			setMessage({
-				title: "Valorado",
-				message: "Usuario valorado",
-			});
-			setMessageVisible(true);
-			setUser({
-				...user,
-				valorations: [
-					...user?.valorations,
-					{
-						user_id: userData.id,
-						rate: valoration,
-					},
-				],
-			});
-			setLoading(false);
-		}).catch((err) => {
-			setLoading(false);
-			setMessage({
-				title: "Error",
-				message: "Ya valoraste este usuario",
-			});
-			setMessageVisible(true);
-		})
-	};
 
 	return (
 		<Layout back>
@@ -218,7 +189,14 @@ const UserView: FunctionComponent<UserViewProps> = () => {
 							</View>
 						</View>
 
-						<View style={JobsGenerals.JobInformationItem}>
+						<View
+							style={[
+								JobsGenerals.JobInformationItem,
+								{
+									marginBottom: sizeNormalizer * 30,
+								},
+							]}
+						>
 							<IconText
 								icon="star"
 								text={
@@ -237,26 +215,12 @@ const UserView: FunctionComponent<UserViewProps> = () => {
 									"Buena",
 									"Excelente",
 								]}
+								isDisabled
 								defaultRating={valorations.average}
 								size={sizeNormalizer * 30}
 								onFinishRating={(valoration) =>
 									setValoration(valoration)
 								}
-							/>
-						</View>
-
-						<View
-							style={[
-								ProfileStyles.Horizontal,
-								{
-									marginVertical: sizeNormalizer * 30,
-								},
-							]}
-						>
-							<AuthButton
-								text="Calificar Usuario"
-								loading={loading}
-								onPress={onValoration}
 							/>
 						</View>
 					</View>
